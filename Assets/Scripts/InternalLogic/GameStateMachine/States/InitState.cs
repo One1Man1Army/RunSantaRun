@@ -2,6 +2,10 @@ using System;
 
 namespace RSR.InternalLogic
 {
+    /// <summary>
+    /// Initialization of game services.
+    /// Grants us control over initialization order.
+    /// </summary>
     public sealed class InitState : IState
     {
         private readonly GameStateMachine _gameStateMachine;
@@ -15,11 +19,6 @@ namespace RSR.InternalLogic
             BindServices();
         }
 
-        private void BindServices()
-        {
-            
-        }
-
         public void Enter()
         {
 
@@ -29,5 +28,20 @@ namespace RSR.InternalLogic
         {
 
         }
+
+        #region Services Bindings
+        private void BindServices()
+        {
+            BindAssetsProvider();
+        }
+
+        private void BindAssetsProvider()
+        {
+            var assetsProvider = new AssetsProvider();
+            _services.AddService<IAssetsProvider>(assetsProvider);
+
+            assetsProvider.Initialize();
+        }
+        #endregion
     }
 }
