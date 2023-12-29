@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace RSR.InternalLogic
+namespace RSR.ServicesLogic
 {
     public interface IAssetsProvider : IService
     {

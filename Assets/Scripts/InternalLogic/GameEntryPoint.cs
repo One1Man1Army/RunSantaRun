@@ -1,4 +1,5 @@
 using UnityEngine;
+using RSR.ServicesLogic;
 
 namespace RSR.InternalLogic
 {
@@ -12,17 +13,17 @@ namespace RSR.InternalLogic
 
         private void Awake()
         {
-            IntsantiateAsSingle();
+            InstantiateAsSingle();
             InitGameStateMachine();
         }
 
         private void InitGameStateMachine()
         {
-            _gameStateMachine = new GameStateMachine();
+            _gameStateMachine = new GameStateMachine(Services.Container);
             _gameStateMachine.Enter<InitState>();
         }
 
-        private void IntsantiateAsSingle()
+        private void InstantiateAsSingle()
         {
             if (_instance != null && _instance != this)
             {

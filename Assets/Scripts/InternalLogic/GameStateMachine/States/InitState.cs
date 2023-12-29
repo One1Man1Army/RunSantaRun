@@ -1,4 +1,6 @@
+using RSR.ServicesLogic;
 using System;
+using UnityEngine;
 
 namespace RSR.InternalLogic
 {
@@ -19,6 +21,7 @@ namespace RSR.InternalLogic
             BindServices();
         }
 
+        #region State Machine Logic
         public void Enter()
         {
 
@@ -28,12 +31,23 @@ namespace RSR.InternalLogic
         {
 
         }
+        #endregion
 
         #region Services Bindings
         private void BindServices()
         {
+            Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
             BindAssetsProvider();
+            Services.Container.AddService<IInputProvider>(new InputProvider());
         }
+
+/*        private void BindMonoProvider()
+        {
+            var providerObject = GameObject.Instantiate(new GameObject("MonoProvider"));
+            var provider = providerObject.AddComponent<MonoProvider>();
+
+            _services.AddService<IMonoProvider>(provider);
+        }*/
 
         private void BindAssetsProvider()
         {

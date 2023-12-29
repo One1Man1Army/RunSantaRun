@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RSR.InternalLogic
+namespace RSR.ServicesLogic
 {
     /// <summary>
     /// Service locator realization.

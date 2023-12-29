@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace RSR.InternalLogic
+namespace RSR.ServicesLogic
 {
     /// <summary>
     /// Provides us access to addressables assets loading and instantiation functionality.
@@ -42,7 +42,7 @@ namespace RSR.InternalLogic
             }
             else
             {
-                var handle = await RunAndCache(Addressables.LoadAssetAsync<T>(assetReference), assetReference.AssetGUID);
+                var handle = await RunAndCacheOnComplete(Addressables.LoadAssetAsync<T>(assetReference), assetReference.AssetGUID);
                 return handle;
             }
         }
@@ -55,14 +55,14 @@ namespace RSR.InternalLogic
             }
             else
             {
-                var handle = await RunAndCache(Addressables.LoadAssetAsync<T>(key), key);
+                var handle = await RunAndCacheOnComplete(Addressables.LoadAssetAsync<T>(key), key);
                 return handle;
             }
         }
         #endregion
 
         #region Inner Methods
-        private async Task<T> RunAndCache<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
+        private async Task<T> RunAndCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
         {
             handle.Completed += completeHandle =>
             {

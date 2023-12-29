@@ -1,4 +1,4 @@
-namespace RSR.InternalLogic
+namespace RSR.ServicesLogic
 {
     public static class AssetsKeys
     {
