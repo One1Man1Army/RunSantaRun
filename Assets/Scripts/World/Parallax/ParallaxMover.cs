@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace RSR.Parallax
 {
+    [RequireComponent (typeof(SpriteRenderer))]
     public sealed class ParallaxMover : MonoBehaviour
     {
         [SerializeField] private Vector2 _parallaxSpeed = Vector2.one;

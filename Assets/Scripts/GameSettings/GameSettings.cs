@@ -7,5 +7,8 @@ namespace RSR.CommonLogic
     {
         [Header("Curtain")]
         public float curtainsFadeTime = 0.33f;
+
+        [Header("Camera")]
+        public Vector3 cameraOffset;
     }
 }

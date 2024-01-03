@@ -27,6 +27,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 93042d8d1061fae4a9c6e50d953957a2
+    m_Address: Camera
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cdca3a13eb9f6024a94bfbc2aee60cab
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 126db538bac075a46861d5e824196da3
+    m_Address: Background
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e6a30435b0980f242a49a250f7ba9f35, type: 2}
   m_SchemaSet:

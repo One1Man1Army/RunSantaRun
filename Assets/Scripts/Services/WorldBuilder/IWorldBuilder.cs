@@ -1,6 +1,7 @@
 ﻿namespace RSR.ServicesLogic
 {
-    public interface IWorldBuilder
+    public interface IWorldBuilder : IService
     {
+        void Build();
     }
 }

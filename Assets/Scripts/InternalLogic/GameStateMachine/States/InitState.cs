@@ -45,6 +45,15 @@ namespace RSR.InternalLogic
             Services.Container.AddService<IInputProvider>(new InputProvider());
             await BindGameSettingsProvider();
             await BindCurtainsService();
+            BindWorldBuilder();
+        }
+
+        private void BindWorldBuilder()
+        {
+            Services.Container.AddService<IWorldBuilder>(new WorldBuilder(
+                Services.Container.GetService<IAssetsProvider>(),
+                Services.Container.GetService<IInputProvider>(),
+                Services.Container.GetService<IGameSettingsProvider>()));
         }
 
         private async UniTask BindCurtainsService()
