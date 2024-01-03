@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace RSR.ServicesLogic
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace RSR.ServicesLogic
     /// Grants us access to sevices adding functionality and provides container with all added services.
     /// Container is available all over the game, but should be used only in classes-initializers, to keep dependencies logic clear.
     /// </summary>
-    public sealed class Services : MonoBehaviour
+    public sealed class Services
     {
         private static Services _instance;
         public static Services Container

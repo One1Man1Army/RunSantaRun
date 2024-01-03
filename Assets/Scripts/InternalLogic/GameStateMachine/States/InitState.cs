@@ -1,5 +1,9 @@
+using Cysharp.Threading.Tasks;
+using RSR.CommonLogic;
+using RSR.Curtain;
 using RSR.ServicesLogic;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RSR.InternalLogic
@@ -34,20 +38,47 @@ namespace RSR.InternalLogic
         #endregion
 
         #region Services Bindings
-        private void BindServices()
+        private async void BindServices()
         {
             Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
             BindAssetsProvider();
             Services.Container.AddService<IInputProvider>(new InputProvider());
+            await BindGameSettingsProvider();
+            await BindCurtainsService();
         }
 
-/*        private void BindMonoProvider()
+        private async UniTask BindCurtainsService()
         {
-            var providerObject = GameObject.Instantiate(new GameObject("MonoProvider"));
-            var provider = providerObject.AddComponent<MonoProvider>();
+            var curtains = await Services.Container.GetService<IAssetsProvider>().Instantiate(AssetsKeys.CurtainsKey);
+            var curtainsView = curtains.GetComponent<ICurtainsView>();
 
-            _services.AddService<IMonoProvider>(provider);
-        }*/
+            try
+            {
+                Services.Container.AddService<ICurtainsService>(new CurtainsService(curtainsView, Services.Container.GetService<IGameSettingsProvider>()));
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Curtains loading error! {e.Message}");
+            }
+            finally
+            {
+                Services.Container.GetService<ICurtainsService>().ShowCurtain(CurtainType.Loading);
+            }
+        }
+
+        private async UniTask BindGameSettingsProvider()
+        {
+            var gameSettings = await Services.Container.GetService<IAssetsProvider>().Load<GameSettings>(AssetsKeys.GameSettingsKey);
+
+            try
+            {
+                Services.Container.AddService<IGameSettingsProvider>(new GameSettingsProvider(gameSettings));
+            }
+            catch (Exception e) 
+            {
+                Debug.Log($"Game Settings loading error! {e.Message}");
+            }
+        }
 
         private void BindAssetsProvider()
         {

@@ -11,7 +11,7 @@ namespace RSR.ServicesLogic
     /// Provides us access to addressables assets loading and instantiation functionality.
     /// Prevents addressables from unnecessary memory usage by caching addressables' handles.
     /// </summary>
-    public sealed class AssetsProvider : MonoBehaviour, IAssetsProvider
+    public sealed class AssetsProvider : IAssetsProvider
     {
         private readonly Dictionary<string, AsyncOperationHandle> _completedHandles = new();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new();
