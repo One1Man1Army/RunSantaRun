@@ -4,11 +4,16 @@ namespace RSR.Player
 {
     public sealed class PlayerMove : MonoBehaviour
     {
-        public float _speed;
+        private IPlayerSpeedMultiplyer _speedMultiplyer;
+
+        public void Construct(IPlayerSpeedMultiplyer speedMultiplyer)
+        {
+            _speedMultiplyer = speedMultiplyer;
+        }
 
         private void Update()
         {
-            transform.Translate(Vector3.right * _speed * Time.deltaTime);
+            transform.Translate(Vector3.right * _speedMultiplyer.Current * Time.deltaTime);
         }
     }
 }

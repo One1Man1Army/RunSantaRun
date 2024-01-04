@@ -1,5 +1,4 @@
-﻿using RSR.CommonLogic;
-using RSR.Curtain;
+﻿using RSR.Curtain;
 
 namespace RSR.ServicesLogic
 {
