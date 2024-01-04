@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RSR.Player
 {
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Collider2D))]
     public sealed class PlayerInteractor : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)

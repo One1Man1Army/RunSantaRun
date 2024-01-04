@@ -1,4 +1,5 @@
 ﻿using RSR.ServicesLogic;
+using RSR.World;
 using UnityEngine;
 
 namespace RSR.Player
@@ -10,14 +11,17 @@ namespace RSR.Player
         private IInputProvider _inputProvider;
         private IPlayerJump _playerJump;
         private IPlayerDeath _playerDeath;
+        private IWorldStarter _worldStarter;
 
-        public void Construct(IInputProvider inputProvider, IPlayerJump playerJump, IPlayerDeath playerDeath)
+        public void Construct(IInputProvider inputProvider, IPlayerJump playerJump, IPlayerDeath playerDeath, IWorldStarter worldStarter)
         {
             _inputProvider = inputProvider;
             _playerJump = playerJump;
             _playerDeath = playerDeath;
+            _worldStarter = worldStarter;
 
             _playerDeath.OnPlayerDeath += DisableInput;
+            _worldStarter.OnStart += EnableInput;
         }
 
         private void Update()
@@ -56,6 +60,9 @@ namespace RSR.Player
         {
             if (_playerDeath != null)
                 _playerDeath.OnPlayerDeath -= DisableInput;
+
+            if (_worldStarter != null)
+                _worldStarter.OnStart -= EnableInput;
         }
     }
 }

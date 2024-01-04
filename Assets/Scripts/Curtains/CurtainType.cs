@@ -1,7 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
-
-namespace RSR.Curtain
+﻿namespace RSR.Curtain
 {
     public enum CurtainType
     {

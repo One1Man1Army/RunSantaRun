@@ -27,7 +27,9 @@ namespace RSR.CameraLogic
 
         private void FollowPlayer()
         {
-            transform.position = _player.position + _offset;
+            var newPos = _player.position + _offset;
+            newPos.y = _offset.y;
+            transform.position = newPos;
         }
     }
 }

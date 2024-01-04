@@ -13,7 +13,7 @@ namespace RSR.Curtain
 
         public void ShowCurtain(CurtainType curtainType)
         {
-            TurnAllCurtainsOff();
+            HideCurtains();
 
             switch (curtainType)
             {
@@ -46,7 +46,7 @@ namespace RSR.Curtain
             }
         }
 
-        private void TurnAllCurtainsOff()
+        public void HideCurtains()
         {
             TurnOffWithFade(_loading);
             TurnOffWithFade(_intro);

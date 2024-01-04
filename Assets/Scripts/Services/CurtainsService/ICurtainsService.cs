@@ -2,8 +2,9 @@
 
 namespace RSR.ServicesLogic
 {
-    internal interface ICurtainsService : IService
+    public interface ICurtainsService : IService
     {
         void ShowCurtain(CurtainType curtainType);
+        void HideCurtains();
     }
 }

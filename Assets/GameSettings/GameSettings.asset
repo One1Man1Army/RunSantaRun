@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   curtainsFadeTime: 0.33
-  cameraOffset: {x: -5, y: -2.5, z: -10}
+  cameraOffset: {x: 5, y: 2.5, z: -10}
+  playerSpeedMultiplyer: 3
+  playerJumpHeight: 3
+  playerJumpTime: 0.5
+  backgroundPos: {x: 0, y: 2.5, z: 0}

@@ -18,6 +18,11 @@ namespace RSR.ServicesLogic
             _curtainsView.SetFadeTime(settingsProvider.GameSettings.curtainsFadeTime);
         }
 
+        public void HideCurtains()
+        {
+            _curtainsView.HideCurtains();
+        }
+
         public void ShowCurtain(CurtainType curtainType)
         {
             _curtainsView.ShowCurtain(curtainType);

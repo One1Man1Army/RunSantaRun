@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RSR.World;
+using System;
 using UnityEngine;
 
 namespace RSR.Player
@@ -8,14 +9,18 @@ namespace RSR.Player
     {
         private IPlayerMoveDirReporter _moveDirReporter;
         private IPlayerDeath _playerDeath;
+        private IWorldStarter _worldStarter;
 
         private Animator _animator;
 
-        public void Construct(IPlayerMoveDirReporter moveDirReporter, IPlayerDeath playerDeath)
+        public void Construct(IPlayerMoveDirReporter moveDirReporter, IPlayerDeath playerDeath, IWorldStarter worldStarter)
         {
             _moveDirReporter = moveDirReporter;
             _playerDeath = playerDeath;
+            _worldStarter = worldStarter;
+
             _playerDeath.OnPlayerDeath += PlayDeath;
+            _worldStarter.OnReady += PlayIdle;
 
             _animator = GetComponent<Animator>();
         }
@@ -43,6 +48,12 @@ namespace RSR.Player
             _animator.SetTrigger(AnimatorHashKeys.DieHash);
         }
 
+
+        private void PlayIdle()
+        {
+            _animator.SetTrigger(AnimatorHashKeys.IdleHash);
+        }
+
         private bool IsInitialized()
         {
             return _moveDirReporter != null && _playerDeath != null && _animator != null;
@@ -52,6 +63,9 @@ namespace RSR.Player
         {
             if (_playerDeath != null)
                 _playerDeath.OnPlayerDeath -= PlayDeath;
+
+            if (_worldStarter != null)
+                _worldStarter.OnReady -= PlayIdle;
         }
     }
 }

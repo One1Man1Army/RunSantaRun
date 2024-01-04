@@ -1,4 +1,5 @@
 ﻿using RSR.ServicesLogic;
+using RSR.World;
 using System;
 using UnityEngine;
 
@@ -9,18 +10,10 @@ namespace RSR.Player
         public float Default { get; private set; }
         public float Current { get; private set; }
 
-        private IPlayerDeath _playerDeath;
-        public void Construct(IGameSettingsProvider gameSettingsProvider, IPlayerDeath playerDeath)
+        public void Construct(IGameSettingsProvider gameSettingsProvider)
         {
             Default = gameSettingsProvider.GameSettings.playerSpeedMultiplyer;
             Current = Default;
-
-            playerDeath.OnPlayerDeath += Stop;
-        }
-
-        private void Stop()
-        {
-            Current = 0;
         }
 
         public void IncreaseWithLerp(float increasedValue, float duration)
@@ -38,12 +31,6 @@ namespace RSR.Player
         .SetRelative()
         .SetEase(Ease.InOutQuad);
             s.Append(forwardTween);*/
-        }
-
-        void OnDestroy()
-        {
-            if( _playerDeath != null )
-                _playerDeath.OnPlayerDeath -= Stop;
         }
     }
 }

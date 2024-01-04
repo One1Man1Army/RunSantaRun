@@ -1,7 +1,9 @@
-﻿namespace RSR.ServicesLogic
+﻿using Cysharp.Threading.Tasks;
+
+namespace RSR.ServicesLogic
 {
     public interface IWorldBuilder : IService
     {
-        void Build();
+        UniTask Build();
     }
 }

@@ -17,5 +17,9 @@ namespace RSR.CommonLogic
         public float playerSpeedMultiplyer = 1f;
         public float playerJumpHeight = 1f;
         public float playerJumpTime = 0.1f;
+
+        [Header("Background")]
+        [Min(0f)]
+        public Vector3 backgroundPos;
     }
 }

@@ -18,7 +18,7 @@ namespace RSR.InternalLogic
 			_states = new Dictionary<Type, IState>
 			{
 				[typeof(InitState)] = new InitState(this, services),
-				[typeof(LoadState)] = new LoadState(this),
+				[typeof(LoadState)] = new LoadState(this, services),
 				[typeof(PlayState)] = new PlayState(this)
 			};
 		}
@@ -29,7 +29,7 @@ namespace RSR.InternalLogic
 			state.Enter();
 		}
 		
-		public T GoToState<T>() where T : class, IState
+		private T GoToState<T>() where T : class, IState
 		{
 			_activeState?.Exit();
 

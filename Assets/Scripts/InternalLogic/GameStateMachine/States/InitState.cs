@@ -3,7 +3,6 @@ using RSR.CommonLogic;
 using RSR.Curtain;
 using RSR.ServicesLogic;
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RSR.InternalLogic
@@ -17,18 +16,21 @@ namespace RSR.InternalLogic
         private readonly GameStateMachine _gameStateMachine;
         private readonly Services _services;
 
+        private bool _isBindingComplete;
+
+
         public InitState(GameStateMachine gameStateMachine, Services services)
         {
             _gameStateMachine = gameStateMachine;
             _services = services;
-
-            BindServices();
         }
 
         #region State Machine Logic
-        public void Enter()
+        public async void Enter()
         {
+            await BindServices();
 
+            _gameStateMachine.Enter<LoadState>();
         }
 
         public void Exit()
@@ -38,14 +40,24 @@ namespace RSR.InternalLogic
         #endregion
 
         #region Services Bindings
-        private async void BindServices()
+        private async UniTask BindServices()
         {
-            Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
+            BindGameStateMachine();
             BindAssetsProvider();
-            Services.Container.AddService<IInputProvider>(new InputProvider());
+            BindInputProvider();
             await BindGameSettingsProvider();
             await BindCurtainsService();
             BindWorldBuilder();
+        }
+
+        private static void BindInputProvider()
+        {
+            Services.Container.AddService<IInputProvider>(new InputProvider());
+        }
+
+        private void BindGameStateMachine()
+        {
+            Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
         }
 
         private void BindWorldBuilder()
@@ -53,7 +65,8 @@ namespace RSR.InternalLogic
             Services.Container.AddService<IWorldBuilder>(new WorldBuilder(
                 Services.Container.GetService<IAssetsProvider>(),
                 Services.Container.GetService<IInputProvider>(),
-                Services.Container.GetService<IGameSettingsProvider>()));
+                Services.Container.GetService<IGameSettingsProvider>(),
+                Services.Container.GetService<ICurtainsService>()));
         }
 
         private async UniTask BindCurtainsService()

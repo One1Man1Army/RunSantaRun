@@ -33,16 +33,17 @@ namespace RSR.Player
 
         public void Jump()
         {
-            if (!IsAbleToJump())
+            if (!CanJump())
                 return;
 
             if (_jump == null)
                 InitJumpSequence();
 
+            _jump.Rewind();
             _jump.Play();
         }
 
-        private bool IsAbleToJump()
+        private bool CanJump()
         {
             return _moveDirReporter.MoveDirection.y == 0 && _moveDirReporter.MoveDirection.x > 0;
         }
@@ -51,8 +52,10 @@ namespace RSR.Player
         {
             _jump = DOTween.Sequence();
 
-            _jump.Append(transform.DOMoveY(_jumpHeight, _jumpTime / 2f).SetEase(Ease.OutExpo));
-            _jump.Append(transform.DOMoveY(_groundHeight, _jumpTime / 2f).SetEase(Ease.InExpo));
+            _jump.Append(transform.DOMoveY(_jumpHeight, _jumpTime / 2f).SetEase(Ease.OutQuad));
+            _jump.Append(transform.DOMoveY(_groundHeight, _jumpTime / 2f).SetEase(Ease.InQuad));
+
+            _jump.SetAutoKill(false);
         }
     }
 }
