@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace RSR.CommonLogic
+namespace RSR.Settings
 {
-    [CreateAssetMenu(fileName = "GameSettings", menuName = "Data/GameSettings")]
+    [CreateAssetMenu(fileName = "GameSettings", menuName = "Settings/Game_Settings")]
     public sealed class GameSettings : ScriptableObject
     {
         [Header("Curtain")]

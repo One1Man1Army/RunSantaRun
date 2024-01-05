@@ -1,5 +1,3 @@
-using UnityEngine.AddressableAssets;
-
 namespace RSR.ServicesLogic
 {
     public static class AssetsKeys
@@ -9,5 +7,6 @@ namespace RSR.ServicesLogic
         public static string CameraKey = "Camera";
         public static string PlayerKey = "Player";
         public static string BackgroundKey = "Background";
+        public static string BoostersSettingsKey = "BoostersSettings";
     }
 }

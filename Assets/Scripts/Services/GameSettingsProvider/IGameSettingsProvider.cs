@@ -1,4 +1,4 @@
-﻿using RSR.CommonLogic;
+﻿using RSR.Settings;
 
 namespace RSR.ServicesLogic
 {

@@ -1,10 +1,11 @@
 using Cysharp.Threading.Tasks;
-using RSR.CommonLogic;
+using RSR.Settings;
 using RSR.Curtain;
 using RSR.ServicesLogic;
 using RSR.World;
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace RSR.InternalLogic
 {
@@ -49,6 +50,7 @@ namespace RSR.InternalLogic
             BindWorldStarter();
             BindPlayerBuilder();
             BindWorldBuilder();
+            await BindBoosetersSettingsProvider();
         }
 
         private static void BindInputProvider()
@@ -129,6 +131,20 @@ namespace RSR.InternalLogic
             _services.AddService<IAssetsProvider>(assetsProvider);
 
             assetsProvider.Initialize();
+        }
+
+        private async UniTask BindBoosetersSettingsProvider()
+        {
+            var boostersSettings = await Services.Container.GetService<IAssetsProvider>().Load<BoostersSettings>(AssetsKeys.BoostersSettingsKey);
+
+            try
+            {
+                Services.Container.AddService<IBoostersSettingsProvider>(new BoostersSettingsProvider(boostersSettings));
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Boosters Settings loading error! {e.Message}");
+            }
         }
         #endregion
     }
