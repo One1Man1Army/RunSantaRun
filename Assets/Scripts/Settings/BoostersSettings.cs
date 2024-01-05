@@ -5,13 +5,15 @@ namespace RSR.Settings
     [CreateAssetMenu(fileName = "BoostersSettings", menuName = "Settings/Boosters_Settings")]
     public sealed class BoostersSettings : ScriptableObject
     {
-        [Header("SlowDownBooster")]
-        public float slowDownBoosterDuration = 10f;
-        public float slowDownBoosterMultiplyer = 2f;
+        public float boostersSpawnHeight = -0.6f;
 
-        [Header("SpeedUpBooster")]
-        public float speedUpBoosterDuration = 10f;
-        public float speedUpBoosterMultiplyer = 2f;
+        [Header("SlowBooster")]
+        public float slowBoosterDuration = 10f;
+        public float slowBoosterMultiplyer = 2f;
+
+        [Header("SpeedBooster")]
+        public float speedBoosterDuration = 10f;
+        public float speedBoosterMultiplyer = 2f;
 
         [Header("FlyBooster")]
         public float flyBoosterDuration = 10f;

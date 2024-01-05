@@ -2,6 +2,7 @@
 using RSR.Player;
 using RSR.World;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace RSR.ServicesLogic
 {
@@ -43,6 +44,11 @@ namespace RSR.ServicesLogic
             BuildPlayerAnimator();
 
             return _player;
+        }
+        
+        public async UniTask Prewarm()
+        {
+            await _assetsProvider.Load<GameObject>(AssetsKeys.PlayerKey);
         }
 
         private async UniTask CreatePlayer()

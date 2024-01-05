@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -59,10 +60,23 @@ namespace RSR.ServicesLogic
                 return handle;
             }
         }
+
+        public async UniTask<IList<T>> LoadMultiple<T>(string key, Action<T> callback = null) where T : class
+        {
+            if (_completedHandles.TryGetValue(key, out AsyncOperationHandle completedHandle))
+            {
+                return completedHandle.Result as IList<T>;
+            }
+            else
+            {
+                var handle = await RunAndCacheOnComplete(Addressables.LoadAssetsAsync(key, callback), key);
+                return handle;
+            }
+        }
         #endregion
 
         #region Inner Methods
-        private async Task<T> RunAndCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
+        private async UniTask<T> RunAndCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
         {
             handle.Completed += completeHandle =>
             {
@@ -71,8 +85,21 @@ namespace RSR.ServicesLogic
 
             AddHandle<T>(cacheKey, handle);
 
-            return await handle.Task;
+            return await handle.ToUniTask();
         }
+
+/*        //Overload for multiple assets.
+        private async UniTask<IList<T>> RunAndCacheOnComplete<T>(AsyncOperationHandle<IList<T>> handle, string cacheKey) where T : class
+        {
+            handle.Completed += completeHandle =>
+            {
+                _completedHandles[cacheKey] = completeHandle;
+            };
+
+            AddHandle<T>(cacheKey, handle);
+
+            return await handle.ToUniTask();
+        }*/
 
         private void AddHandle<T>(string cacheKey, AsyncOperationHandle handle) where T : class
         {

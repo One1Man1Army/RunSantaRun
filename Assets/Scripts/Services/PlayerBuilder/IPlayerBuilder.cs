@@ -6,5 +6,6 @@ namespace RSR.ServicesLogic
     public interface IPlayerBuilder : IService
     {
         UniTask<PlayerFacade> Build();
+        UniTask Prewarm();
     }
 }

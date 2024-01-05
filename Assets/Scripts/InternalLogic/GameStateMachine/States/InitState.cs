@@ -47,10 +47,10 @@ namespace RSR.InternalLogic
             BindInputProvider();
             await BindGameSettingsProvider();
             await BindCurtainsService();
+            await BindBoosetersSettingsProvider();
             BindWorldStarter();
             BindPlayerBuilder();
             BindWorldBuilder();
-            await BindBoosetersSettingsProvider();
         }
 
         private static void BindInputProvider()
@@ -89,7 +89,8 @@ namespace RSR.InternalLogic
                 Services.Container.GetService<IGameSettingsProvider>(),
                 Services.Container.GetService<ICurtainsService>(),
                 Services.Container.GetService<IWorldStarter>(),
-                Services.Container.GetService<IPlayerBuilder>()));
+                Services.Container.GetService<IPlayerBuilder>(),
+                Services.Container.GetService<IBoostersSettingsProvider>()));
         }
 
         private async UniTask BindCurtainsService()

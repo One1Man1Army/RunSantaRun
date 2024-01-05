@@ -8,5 +8,6 @@ namespace RSR.ServicesLogic
         public static string PlayerKey = "Player";
         public static string BackgroundKey = "Background";
         public static string BoostersSettingsKey = "BoostersSettings";
+        public static string BoostersLabel = "Booster";
     }
 }
