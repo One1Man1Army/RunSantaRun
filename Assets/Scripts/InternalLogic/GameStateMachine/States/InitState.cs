@@ -2,22 +2,21 @@ using Cysharp.Threading.Tasks;
 using RSR.CommonLogic;
 using RSR.Curtain;
 using RSR.ServicesLogic;
+using RSR.World;
 using System;
 using UnityEngine;
 
 namespace RSR.InternalLogic
 {
     /// <summary>
-    /// Initialization of game services.
-    /// Grants us control over initialization order.
+    /// Initialization of internal game services.
+    /// Grants us control over initialization and initialization order.
+    /// Provides services with necessary dependencies.
     /// </summary>
     public sealed class InitState : IState
     {
         private readonly GameStateMachine _gameStateMachine;
         private readonly Services _services;
-
-        private bool _isBindingComplete;
-
 
         public InitState(GameStateMachine gameStateMachine, Services services)
         {
@@ -47,6 +46,8 @@ namespace RSR.InternalLogic
             BindInputProvider();
             await BindGameSettingsProvider();
             await BindCurtainsService();
+            BindWorldStarter();
+            BindPlayerBuilder();
             BindWorldBuilder();
         }
 
@@ -60,13 +61,33 @@ namespace RSR.InternalLogic
             Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
         }
 
+        private void BindWorldStarter()
+        {
+            var starter = UnityEngine.Object.Instantiate(new GameObject("World Starter")).AddComponent<WorldStarter>();
+            starter.Construct(Services.Container.GetService<IInputProvider>(), Services.Container.GetService<ICurtainsService>());
+            _services.AddService<IWorldStarter>(starter);
+        }
+
+        private void BindPlayerBuilder()
+        {
+            Services.Container.AddService<IPlayerBuilder>(new PlayerBuilder(
+                Services.Container.GetService<IAssetsProvider>(),
+                Services.Container.GetService<IInputProvider>(),
+                Services.Container.GetService<IGameSettingsProvider>(),
+                Services.Container.GetService<ICurtainsService>(),
+                Services.Container.GetService<IWorldStarter>()));
+        }
+
+
         private void BindWorldBuilder()
         {
             Services.Container.AddService<IWorldBuilder>(new WorldBuilder(
                 Services.Container.GetService<IAssetsProvider>(),
                 Services.Container.GetService<IInputProvider>(),
                 Services.Container.GetService<IGameSettingsProvider>(),
-                Services.Container.GetService<ICurtainsService>()));
+                Services.Container.GetService<ICurtainsService>(),
+                Services.Container.GetService<IWorldStarter>(),
+                Services.Container.GetService<IPlayerBuilder>()));
         }
 
         private async UniTask BindCurtainsService()

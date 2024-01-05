@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RSR.Player
 {
     [RequireComponent(typeof(Animator))]
-    public sealed class PlayerAnimator : MonoBehaviour
+    public sealed class PlayerAnimator : MonoBehaviour, IPlayerAnimator
     {
         private IPlayerMoveDirReporter _moveDirReporter;
         private IPlayerDeath _playerDeath;
