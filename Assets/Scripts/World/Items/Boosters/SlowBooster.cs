@@ -1,3 +1,4 @@
+using RSR.Player;
 using RSR.ServicesLogic;
 
 namespace RSR.World
@@ -6,18 +7,23 @@ namespace RSR.World
     {
         public override BoosterType Type => BoosterType.Slow;
 
+        private IPlayerSpeedMultiplyer _playerSpeedMultiplyer;
+
         private float _duration;
         private float _multiplyer;
 
-        public void Constuct(IBoostersSettingsProvider settingsProvider)
+        public void Constuct(IBoostersSettingsProvider settingsProvider, IPlayerSpeedMultiplyer playerSpeedMultiplyer)
         {
+            _playerSpeedMultiplyer = playerSpeedMultiplyer;
+
             _duration = settingsProvider.BoostersSettings.slowBoosterDuration;
             _multiplyer = settingsProvider.BoostersSettings.slowBoosterMultiplyer;
         }
 
         public void OnInteract()
         {
-
+            _playerSpeedMultiplyer.Boost(_multiplyer, _duration);
+            Release();
         }
     }
 }

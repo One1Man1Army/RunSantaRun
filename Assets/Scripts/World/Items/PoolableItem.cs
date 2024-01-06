@@ -9,9 +9,11 @@ namespace RSR.World
         private ObjectsPool<PoolableItem> _pool;
         public abstract ItemType ItemType { get; }
 
+        private Tween _selfDestroy;
+
         private void OnEnable()
         {
-            DOVirtual.DelayedCall(20f, ReleaseSelf);
+            _selfDestroy = DOVirtual.DelayedCall(20f, ReleaseSelf);
         }
 
         public void SetPool(ObjectsPool<PoolableItem> pool)
@@ -33,6 +35,11 @@ namespace RSR.World
                     Release();
                 }
             }
+        }
+
+        private void OnDisable()
+        {
+            _selfDestroy?.Kill();
         }
     }
 }

@@ -107,7 +107,7 @@ namespace RSR.ServicesLogic
         private void BuildPlayerSpeedMultiplyer()
         {
             var speedMultiplyer = _player.GetOrAddComponent<PlayerSpeedMultiplyer>();
-            speedMultiplyer.Construct(_settingsProvider);
+            speedMultiplyer.Construct(_settingsProvider, _worldStarter);
             _player.SpeedMultiplyer = speedMultiplyer;
         }
         #endregion

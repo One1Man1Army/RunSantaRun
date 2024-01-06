@@ -65,10 +65,10 @@ namespace RSR.World
             switch (instance.Type)
             {
                 case BoosterType.Slow:
-                    (instance as SlowBooster).Constuct(_settingsProvider);
+                    (instance as SlowBooster).Constuct(_settingsProvider, _playerFacade.SpeedMultiplyer);
                     break;
                 case BoosterType.Speed:
-                    (instance as SpeedBooster).Constuct(_settingsProvider);
+                    (instance as SpeedBooster).Constuct(_settingsProvider, _playerFacade.SpeedMultiplyer);
                     break;
                 case BoosterType.Fly:
                     (instance as FlyBooster).Constuct(_settingsProvider);

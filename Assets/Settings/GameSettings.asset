@@ -17,12 +17,13 @@ MonoBehaviour:
   playerSpeedMultiplyer: 3
   playerJumpHeight: 3
   playerJumpTime: 0.5
+  speedAddPerFrame: 0.1
   backgroundPos: {x: 0, y: 2.5, z: 0}
-  spawnCooldownMin: 1.3
-  spawnCooldownMax: 5
-  spawnToPlayerOffset: 20
+  spawnCooldownMin: 0.75
+  spawnCooldownMax: 2
+  spawnToPlayerOffset: 15
   itemsRandomWeights:
   - item: 0
-    weight: 80
+    weight: 70
   - item: 1
-    weight: 20
+    weight: 30

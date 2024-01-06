@@ -31,7 +31,7 @@ namespace RSR.Player
         {
             if (_canMove)
             {
-                transform.Translate(Vector3.right * _speedMultiplyer.Current * Time.deltaTime);
+                transform.Translate(Vector3.right * _speedMultiplyer.Current * _speedMultiplyer.SpeedUp * Time.deltaTime);
             }
         }
 

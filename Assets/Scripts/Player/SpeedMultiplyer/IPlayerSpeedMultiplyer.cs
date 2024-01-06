@@ -4,5 +4,7 @@
     {
         float Default { get; }
         float Current { get; }
+        float SpeedUp { get; }
+        void Boost(float multiplyer, float duration);
     }
 }

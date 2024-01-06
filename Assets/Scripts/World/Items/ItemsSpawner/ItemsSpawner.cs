@@ -90,7 +90,6 @@ namespace RSR.World
 
         private void ReleaseAll()
         {
-            Debug.Log("Released All");
             _boostersFactory.ReleaseAll();
             _obstaclesFactory.ReleaseAll();
         }
