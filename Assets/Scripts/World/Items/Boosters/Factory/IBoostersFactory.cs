@@ -8,5 +8,6 @@ namespace RSR.World
         void Create(BoosterType booster, Vector3 pos);
         void CreateRandom(Vector3 pos);
         UniTask Initialize();
+        void ReleaseAll();
     }
 }

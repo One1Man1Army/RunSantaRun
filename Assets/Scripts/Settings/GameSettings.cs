@@ -22,16 +22,15 @@ namespace RSR.Settings
         public float playerJumpTime = 0.1f;
 
         [Header("Background")]
-        [Min(0f)]
         public Vector3 backgroundPos;
 
         [Header("Items")]
         [Min(0.1f)]
-        public float spawnCooldownMin = 1f;
+        public float spawnCooldownMin = 0.5f;
         [Min(0.1f)]
-        public float spawnCooldownMax = 5f;
+        public float spawnCooldownMax = 3f;
         [Min(0.25f)]
-        public float spawnToPlayerOffset = 10f;
+        public float spawnToPlayerOffset = 20f;
         public ItemRandomWeight[] itemsRandomWeights;
     }
 }

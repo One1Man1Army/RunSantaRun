@@ -18,3 +18,11 @@ MonoBehaviour:
   playerJumpHeight: 3
   playerJumpTime: 0.5
   backgroundPos: {x: 0, y: 2.5, z: 0}
+  spawnCooldownMin: 1.3
+  spawnCooldownMax: 5
+  spawnToPlayerOffset: 20
+  itemsRandomWeights:
+  - item: 0
+    weight: 80
+  - item: 1
+    weight: 20

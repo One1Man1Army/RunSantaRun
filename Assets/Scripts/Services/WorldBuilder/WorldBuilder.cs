@@ -22,17 +22,19 @@ namespace RSR.ServicesLogic
         private readonly IAssetsProvider _assetsProvider;
         private readonly IInputProvider _inputProvider;
         private readonly IGameSettingsProvider _gameSettingsProvider;
+        private readonly IBoostersSettingsProvider _boosterSettingsProvider;
+        private readonly IObstaclesSettingsProvider _obstaclesSettingsProvider;
         private readonly ICurtainsService _curtainsService;
         private readonly IPlayerBuilder _playerBuilder;
         private readonly IWorldStarter _worldStarter;
-        private readonly IBoostersSettingsProvider _boosterSettingsProvider;
         private readonly IRandomService _randomService;
 
         private PlayerFacade _player;
         private GameObject _camera;
         private GameObject _background;
         private IBoostersFactory _boostersFactory;
-
+        private IObstaclesFactory _obstaclesFactory;
+        private IItemsSpawner _itemsSpawner;
 
         public WorldBuilder(IAssetsProvider assetsProvider,
                             IInputProvider inputProvider,
@@ -41,7 +43,8 @@ namespace RSR.ServicesLogic
                             IWorldStarter worldStarter,
                             IPlayerBuilder playerBuilder,
                             IBoostersSettingsProvider boosterSettingsProvider,
-                            IRandomService randomService)
+                            IRandomService randomService,
+                            IObstaclesSettingsProvider obstaclesSettingsProvider)
         {
             _assetsProvider = assetsProvider;
             _inputProvider = inputProvider;
@@ -51,6 +54,7 @@ namespace RSR.ServicesLogic
             _playerBuilder = playerBuilder;
             _boosterSettingsProvider = boosterSettingsProvider;
             _randomService = randomService;
+            _obstaclesSettingsProvider = obstaclesSettingsProvider;
         }
 
         public async UniTask Build()
@@ -59,6 +63,8 @@ namespace RSR.ServicesLogic
             await BuildCamera();
             await BuildBackground();
             await BuildBoostersFactory();
+            await BuildObstaclesFactory();
+            BuildItemsSpawner();
 
             _worldStarter.GetReady();
         }
@@ -99,11 +105,26 @@ namespace RSR.ServicesLogic
         }
         #endregion
 
-        #region Boosters Factory Building
+        #region Factories Building
         private async UniTask BuildBoostersFactory()
         {
             _boostersFactory = new BoostersFactory(_assetsProvider, _boosterSettingsProvider, _randomService, _player);
             await _boostersFactory.Initialize();
+        }
+
+        private async UniTask BuildObstaclesFactory()
+        {
+            _obstaclesFactory = new ObstaclesFactory(_assetsProvider, _obstaclesSettingsProvider, _randomService, _player);
+            await _obstaclesFactory.Initialize();
+        }
+        #endregion
+
+        #region Items Spawner Building
+        private void BuildItemsSpawner()
+        {
+            var spawner = new GameObject("Items Spawner").AddComponent<ItemsSpawner>();
+            spawner.Construct(_gameSettingsProvider, _randomService, _worldStarter, _boostersFactory, _obstaclesFactory, _player);
+            _itemsSpawner = spawner;
         }
         #endregion
     }

@@ -56,6 +56,17 @@ namespace RSR.InternalLogic
             obj.gameObject.SetActive(false);
         }
 
+        public void ReleaseAll()
+        {
+            if (_activeObjects.Count > 0)
+            {
+                foreach (var obj in _activeObjects)
+                {
+                    Release(obj);
+                }
+            }
+        }
+
         private void Initialize(string rootName)
         {
             _root = new GameObject(rootName).transform;

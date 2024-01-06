@@ -1,4 +1,5 @@
-﻿using RSR.Curtain;
+﻿using DG.Tweening;
+using RSR.Curtain;
 using RSR.ServicesLogic;
 using System;
 using UnityEngine;
@@ -7,14 +8,16 @@ namespace RSR.World
 {
     public sealed class WorldStarter : MonoBehaviour, IWorldStarter
     {
-        public event Action OnStart;
         public event Action OnReady;
+        public event Action OnStart;
+        public event Action OnRestart;
 
         private IInputProvider _inputProvider;
         private ICurtainsService _curtainsService;
 
         private bool _isReady;
         private bool _isStarted;
+        private bool _isFinished;
 
         public void Construct(IInputProvider inputProvider, ICurtainsService curtainsService)
         {
@@ -32,18 +35,24 @@ namespace RSR.World
 
         private void Update()
         {
-            StartOnTap();
+            ProcessInput();
         }
 
-        private void StartOnTap()
+        private void ProcessInput()
         {
             if (IsInitialized())
             {
-                if (CanStart())
+                if (_inputProvider.HasPlayerTapped())
                 {
-                    if (_inputProvider.HasPlayerTapped())
+                    if (CanStart())
                     {
                         StartWorld();
+                        return;
+                    }
+
+                    if (CanRetart())
+                    {
+                        RestartWorld();
                     }
                 }
             }
@@ -52,8 +61,17 @@ namespace RSR.World
         private void StartWorld()
         {
             _isStarted = true;
+            _isFinished = false;
             OnStart?.Invoke();
             _curtainsService.HideCurtains();
+        }
+
+        private void RestartWorld()
+        {
+            _isStarted = false;
+            _isFinished = false;
+            OnRestart?.Invoke();
+            _curtainsService.ShowCurtain(CurtainType.Intro);
         }
 
         private bool CanStart()
@@ -61,9 +79,23 @@ namespace RSR.World
             return _isReady && !_isStarted;
         }
 
+        private bool CanRetart()
+        {
+            return _isFinished && _isStarted;
+        }
+
         private bool IsInitialized()
         {
             return _inputProvider != null && _curtainsService != null;
+        }
+
+        public void FinishWorld()
+        {
+            DOVirtual.DelayedCall(1f, () =>
+            {
+                _isFinished = true;
+                _curtainsService.ShowCurtain(CurtainType.Outro);
+            });
         }
     }
 }

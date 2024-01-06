@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95cf7b3390d6dab498caeea7c34bf98b, type: 3}
   m_Name: ObstaclesSettings
   m_EditorClassIdentifier: 
-  obstaclesSpawnHeight: -0.6
-  obstaclesRandomWeights: []
+  lowSpawnHeight: -0.2
+  highSpawnHeight: 0.1
+  obstaclesRandomWeights:
+  - obstacle: 0
+    weight: 80
+  - obstacle: 1
+    weight: 20

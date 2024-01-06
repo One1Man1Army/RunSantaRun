@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5174267465dac42b31f07ed6ebc891, type: 3}
   m_Name: BoostersSettings
   m_EditorClassIdentifier: 
-  slowDownBoosterDuration: 10
-  slowDownBoosterMultiplyer: 2
-  speedUpBoosterDuration: 10
-  speedUpBoosterMultiplyer: 2
+  boostersSpawnHeight: -0.6
+  slowBoosterDuration: 10
+  slowBoosterMultiplyer: 2
+  speedBoosterDuration: 10
+  speedBoosterMultiplyer: 2
   flyBoosterDuration: 10
   flyBoosterHeight: 10
+  boostersRandomWeights:
+  - booster: 0
+    weight: 20
+  - booster: 1
+    weight: 60
+  - booster: 2
+    weight: 20

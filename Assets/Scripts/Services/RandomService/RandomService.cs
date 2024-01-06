@@ -17,7 +17,7 @@ namespace RSR.ServicesLogic
                 randomWeight -= weights[i];
                 if (randomWeight < 0)
                 {
-                    return weightsTable[i];
+                    return weightsTable[weights[i]];
                 }
             }
 

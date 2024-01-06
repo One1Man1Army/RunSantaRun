@@ -11,6 +11,7 @@ namespace RSR.World
         private IWorldStarter _worldStarter;
         private IGameSettingsProvider _settingsProvider;
         private IBoostersFactory _boostersFactory;
+        private IObstaclesFactory _obstaclesFactory;
         private IPlayerDeath _playerDeath;
         private Transform _player;
 
@@ -21,17 +22,20 @@ namespace RSR.World
         private float _timer;
         private bool _canSpawn;
 
-        public void Construct(IGameSettingsProvider settingsProvider, IRandomService randomService, IWorldStarter worldStarter, IBoostersFactory boostersFactory, PlayerFacade player)
+        public void Construct(IGameSettingsProvider settingsProvider, IRandomService randomService, IWorldStarter worldStarter, IBoostersFactory boostersFactory, IObstaclesFactory obstaclesFactory, PlayerFacade player)
         {
             _randomService = randomService;
             _worldStarter = worldStarter;
             _settingsProvider = settingsProvider;
             _boostersFactory = boostersFactory;
+            _obstaclesFactory = obstaclesFactory;
             _player = player.transform;
             _playerDeath = player.Death;
 
             _worldStarter.OnStart += EnableSpawn;
+            _worldStarter.OnRestart += ReleaseAll;
             _playerDeath.OnPlayerDeath += DisableSpawn;
+
             InitRndWeightsTable();
         }
 
@@ -54,7 +58,7 @@ namespace RSR.World
 
             _nextItemSpawnTime = _randomService.GetRange(
                 _settingsProvider.GameSettings.spawnCooldownMin,
-                _settingsProvider.GameSettings.spawnCooldownMin);
+                _settingsProvider.GameSettings.spawnCooldownMax);
         }
 
         private void SpawnRandomItem()
@@ -67,6 +71,7 @@ namespace RSR.World
             switch (item)
             {
                 case ItemType.Obstacle:
+                    _obstaclesFactory.CreateRandom(pos);
                     break;
                 case ItemType.Booster:
                     _boostersFactory.CreateRandom(pos);
@@ -82,6 +87,12 @@ namespace RSR.World
             }
         }
 
+        private void ReleaseAll()
+        {
+            _boostersFactory.ReleaseAll();
+            _obstaclesFactory.ReleaseAll();
+        }
+
         private void EnableSpawn()
         {
             _canSpawn = true;
@@ -95,6 +106,7 @@ namespace RSR.World
         private void OnDestroy()
         {
             _worldStarter.OnStart -= EnableSpawn;
+            _worldStarter.OnRestart -= ReleaseAll;
             _playerDeath.OnPlayerDeath -= DisableSpawn;
         }
     }

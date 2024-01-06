@@ -1,6 +1,7 @@
 ﻿namespace RSR.World
 {
-    internal interface IItemsSpawner
+    public interface IItemsSpawner
     {
+
     }
 }

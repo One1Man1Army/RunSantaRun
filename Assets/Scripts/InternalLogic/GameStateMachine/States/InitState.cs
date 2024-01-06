@@ -5,7 +5,6 @@ using RSR.ServicesLogic;
 using RSR.World;
 using System;
 using UnityEngine;
-using System.Threading.Tasks;
 
 namespace RSR.InternalLogic
 {
@@ -45,6 +44,7 @@ namespace RSR.InternalLogic
             BindGameStateMachine();
             BindAssetsProvider();
             BindInputProvider();
+            BindRandomService();
             await BindGameSettingsProvider();
             await BindBoosetersSettingsProvider();
             await BindObstaclesSettingsProvider();
@@ -57,6 +57,11 @@ namespace RSR.InternalLogic
         private static void BindInputProvider()
         {
             Services.Container.AddService<IInputProvider>(new InputProvider());
+        }
+
+        private void BindRandomService()
+        {
+            Services.Container.AddService<IRandomService>(new RandomService());
         }
 
         private void BindGameStateMachine()
@@ -85,7 +90,8 @@ namespace RSR.InternalLogic
                 Services.Container.GetService<IWorldStarter>(),
                 Services.Container.GetService<IPlayerBuilder>(),
                 Services.Container.GetService<IBoostersSettingsProvider>(),
-                Services.Container.GetService<IRandomService>()));
+                Services.Container.GetService<IRandomService>(),
+                Services.Container.GetService<IObstaclesSettingsProvider>()));
         }
 
         private async UniTask BindCurtainsService()

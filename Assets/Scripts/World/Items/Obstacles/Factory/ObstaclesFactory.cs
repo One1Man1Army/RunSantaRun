@@ -17,29 +17,29 @@ namespace RSR.World
     /// </summary>
     public sealed class ObstaclesFactory : ItemsFactory, IObstaclesFactory
     {
+        #region Fields
         private readonly IObstaclesSettingsProvider _settingsProvider;
         private readonly IRandomService _randomService;
-        private readonly IPlayerDeath _playerDeath;
+        private readonly PlayerFacade _playerFacade;
 
         //Inner obstacles weights table, initialized from obstacles' settings data, where we can set weights values.
         private readonly Dictionary<int, ObstacleType> _obstaclesRandomWeightsTable = new();
 
         //Storage with a pool for each obstacle type.
         private readonly Dictionary<ObstacleType, ObjectsPool<PoolableItem>> _obstaclesStorage = new();
+        #endregion
 
-        private readonly float _obstaclesSpawnHeight;
-
-        public ObstaclesFactory(IAssetsProvider assetsProvider, IObstaclesSettingsProvider settingsProvider, IRandomService randomService, IPlayerDeath playerDeath)
+        public ObstaclesFactory(IAssetsProvider assetsProvider, IObstaclesSettingsProvider settingsProvider, IRandomService randomService, PlayerFacade playerFacade)
         {
             _settingsProvider = settingsProvider;
             _assetsProvider = assetsProvider;
             _randomService = randomService;
-
-            _obstaclesSpawnHeight = settingsProvider.ObstaclesSettings.obstaclesSpawnHeight;
+            _playerFacade = playerFacade;
         }
 
         #region Spawning
 
+        //Spawns obstacle and provides it with all necessary dependencies.
         public void Create(ObstacleType obstacle, Vector3 pos)
         {
             if (!_obstaclesStorage.ContainsKey(obstacle))
@@ -48,13 +48,32 @@ namespace RSR.World
                 return;
             }
 
-            pos.y = _obstaclesSpawnHeight;
-            _obstaclesStorage[obstacle].Get(pos);
+            switch(obstacle)
+            {
+                case ObstacleType.Low:
+                    pos.y = _settingsProvider.ObstaclesSettings.lowSpawnHeight; 
+                    break;
+                case ObstacleType.High:
+                    pos.y = _settingsProvider.ObstaclesSettings.highSpawnHeight;
+                    break;
+            }
+
+            var instance = _obstaclesStorage[obstacle].Get(pos) as Obstacle;
+            instance.Consturct(_settingsProvider, _playerFacade.Death, _playerFacade.MoveDirReporter);
+            instance.SetPool(_obstaclesStorage[obstacle]);
         }
 
         public void CreateRandom(Vector3 pos)
         {
             Create(_randomService.GetWeightedRandomValue(_obstaclesRandomWeightsTable), pos);
+        }
+
+        public void ReleaseAll()
+        {
+            foreach (var pool in _obstaclesStorage.Values)
+            {
+                pool.ReleaseAll();
+            }
         }
         #endregion
 
@@ -68,8 +87,11 @@ namespace RSR.World
         }
 
         //Fulfills obstacles' storage with pools for each obstacle type from all addressables "Obstacle"-labled prefabs.
-        private void InitStorage()
+        protected override void InitStorage()
         {
+            if (_prefabs == null || _prefabs.Count == 0)
+                return;
+
             foreach (var prefab in _prefabs)
             {
                 var obstacle = prefab.GetComponent<Obstacle>();
@@ -80,21 +102,8 @@ namespace RSR.World
                     continue;
                 }
 
-                ConstructObstaclePrefab(obstacle);
-                AddToStorage(obstacle);
+                _obstaclesStorage.Add(obstacle.Type, new ObjectsPool<PoolableItem>(obstacle, 3, 10, $"{obstacle.Type} obstacles pool"));
             }
-        }
-
-        private void AddToStorage(Obstacle obstacle)
-        {
-            _obstaclesStorage.Add(obstacle.Type, new ObjectsPool<PoolableItem>(obstacle, 3, 10, $"{obstacle.Type} obstacles pool"));
-            obstacle.SetPool(_obstaclesStorage[obstacle.Type]);
-        }
-
-        //Provides obstacle with necessary dependencies.
-        private void ConstructObstaclePrefab(Obstacle obstacle)
-        {
-            obstacle.Consturct(_playerDeath);
         }
 
         private void InitRndWeightsTable()

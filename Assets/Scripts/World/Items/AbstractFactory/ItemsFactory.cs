@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using RSR.ServicesLogic;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,16 @@ namespace RSR.World
 
         protected async UniTask LoadPrefabs(string prefabsLabel)
         {
-            _prefabs = await _assetsProvider.LoadMultiple<GameObject>(prefabsLabel);
+            try
+            {
+                _prefabs = await _assetsProvider.LoadMultiple<GameObject>(prefabsLabel);
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"{prefabsLabel} prefabs loading failed! {e.Message}");
+            }
         }
+
+        protected abstract void InitStorage();
     }
 }

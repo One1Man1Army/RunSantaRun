@@ -65,6 +65,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - Booster
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be62f360f56c62e48a0087f258f8ff1b
+    m_Address: ObstaclesSettings
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6476744bea1515545be77fc4006710cb
+    m_Address: HighObstacle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Obstacle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f22c64f50f06c2042ba66ca2bcfd8716
+    m_Address: LowObstacle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Obstacle
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e6a30435b0980f242a49a250f7ba9f35, type: 2}
   m_SchemaSet:

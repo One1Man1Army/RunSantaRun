@@ -1,4 +1,5 @@
-﻿using RSR.World;
+﻿using RSR.ServicesLogic;
+using RSR.World;
 using System;
 using UnityEngine;
 
@@ -7,9 +8,11 @@ namespace RSR.Player
     public sealed class PlayerDeath : MonoBehaviour, IPlayerDeath
     {
         private IWorldStarter _worldStarter;
+
         public void Construct(IWorldStarter worldStarter)
         {
             _worldStarter = worldStarter;
+
             _worldStarter.OnReady += GetAlive;
         }
 
@@ -21,6 +24,7 @@ namespace RSR.Player
         {
             IsDead = true;
             OnPlayerDeath?.Invoke();
+            _worldStarter.FinishWorld();
         }
 
         private void GetAlive()

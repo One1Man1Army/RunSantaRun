@@ -18,9 +18,10 @@ namespace RSR.World
     /// </summary>
     public sealed class BoostersFactory : ItemsFactory, IBoostersFactory
     {
+        #region Fields
         private readonly IBoostersSettingsProvider _settingsProvider;
-        private readonly IPlayerSpeedMultiplyer _playerSpeedMultiplyer;
         private readonly IRandomService _randomService;
+        private readonly PlayerFacade _playerFacade;
 
         //Inner boosters weights table, initialized from boosters' settings data, where we can set weights values.
         private readonly Dictionary<int, BoosterType> _boostersRandomWeightsTable = new();
@@ -29,13 +30,14 @@ namespace RSR.World
         private readonly Dictionary<BoosterType, ObjectsPool<PoolableItem>> _boostersStorage = new();
 
         private readonly float _boostersSpawnHeight;
+        #endregion
 
         public BoostersFactory(IAssetsProvider assetsProvider, IBoostersSettingsProvider settingsProvider, IRandomService randomService, PlayerFacade player) 
         {
             _settingsProvider = settingsProvider;
             _assetsProvider = assetsProvider;
             _randomService = randomService;
-            _playerSpeedMultiplyer = player.SpeedMultiplyer;
+            _playerFacade = player;
 
             _boostersSpawnHeight = settingsProvider.BoostersSettings.boostersSpawnHeight;
         }
@@ -51,12 +53,40 @@ namespace RSR.World
             }
 
             pos.y = _boostersSpawnHeight;
-            _boostersStorage[booster].Get(pos);
+            var instance = _boostersStorage[booster].Get(pos) as Booster;
+            ConstructBooster(instance);
+        }
+
+        //Provides booster with all necessary dependencies.
+        private void ConstructBooster(Booster instance)
+        {
+            instance.SetPool(_boostersStorage[instance.Type]);
+
+            switch (instance.Type)
+            {
+                case BoosterType.Slow:
+                    (instance as SlowBooster).Constuct(_settingsProvider);
+                    break;
+                case BoosterType.Speed:
+                    (instance as SpeedBooster).Constuct(_settingsProvider);
+                    break;
+                case BoosterType.Fly:
+                    (instance as FlyBooster).Constuct(_settingsProvider);
+                    break;
+            }
         }
 
         public void CreateRandom(Vector3 pos)
         {
             Create(_randomService.GetWeightedRandomValue(_boostersRandomWeightsTable), pos);
+        }
+
+        public void ReleaseAll()
+        {
+            foreach (var pool in _boostersStorage.Values)
+            {
+                pool.ReleaseAll();
+            }
         }
         #endregion
 
@@ -70,8 +100,11 @@ namespace RSR.World
         }
 
         //Fulfills boosters' storage with pools for each booster type from all addressables "Booster"-labled prefabs.
-        private void InitStorage()
+        protected override void InitStorage()
         {
+            if (_prefabs == null || _prefabs.Count == 0)
+                return;
+
             foreach (var prefab in _prefabs)
             {
                 var booster = prefab.GetComponent<Booster>();
@@ -82,31 +115,7 @@ namespace RSR.World
                     continue;
                 }
 
-                ConstructBoosterPrefab(booster);
-                AddToStorage(booster);
-            }
-        }
-
-        private void AddToStorage(Booster booster)
-        {
-            _boostersStorage.Add(booster.Type, new ObjectsPool<PoolableItem>(booster, 3, 10, $"{booster.Type} boosters pool"));
-            booster.SetPool(_boostersStorage[booster.Type]);
-        }
-
-        //Provides booster with necessary dependencies.
-        private void ConstructBoosterPrefab(Booster booster)
-        {
-            switch (booster.Type)
-            {
-                case BoosterType.Slow:
-                    (booster as SlowBooster).Constuct(_settingsProvider);
-                    break;
-                case BoosterType.Speed:
-                    (booster as SpeedBooster).Constuct(_settingsProvider);
-                    break;
-                case BoosterType.Fly:
-                    (booster as FlyBooster).Constuct(_settingsProvider);
-                    break;
+                _boostersStorage.Add(booster.Type, new ObjectsPool<PoolableItem>(booster, 3, 10, $"{booster.Type} boosters pool"));
             }
         }
 

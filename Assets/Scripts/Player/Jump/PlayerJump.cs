@@ -23,13 +23,6 @@ namespace RSR.Player
             _jumpTime = settingsProvider.GameSettings.playerJumpTime;
             _groundHeight = transform.position.y;
         }
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent<IInteractable>(out var interactable))
-            {
-                interactable.OnInteract();
-            }
-        }
 
         public void Jump()
         {
