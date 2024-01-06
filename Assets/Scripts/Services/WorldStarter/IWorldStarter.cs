@@ -7,7 +7,6 @@ namespace RSR.World
     {
         event Action OnReady;
         event Action OnStart;
-        event Action OnRestart;
         void GetReady();
         void FinishWorld();
     }

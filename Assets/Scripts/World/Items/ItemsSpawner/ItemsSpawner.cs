@@ -33,7 +33,8 @@ namespace RSR.World
             _playerDeath = player.Death;
 
             _worldStarter.OnStart += EnableSpawn;
-            _worldStarter.OnRestart += ReleaseAll;
+            _worldStarter.OnStart += SetTimer;
+            _worldStarter.OnReady += ReleaseAll;
             _playerDeath.OnPlayerDeath += DisableSpawn;
 
             InitRndWeightsTable();
@@ -89,6 +90,7 @@ namespace RSR.World
 
         private void ReleaseAll()
         {
+            Debug.Log("Released All");
             _boostersFactory.ReleaseAll();
             _obstaclesFactory.ReleaseAll();
         }
@@ -106,7 +108,8 @@ namespace RSR.World
         private void OnDestroy()
         {
             _worldStarter.OnStart -= EnableSpawn;
-            _worldStarter.OnRestart -= ReleaseAll;
+            _worldStarter.OnStart -= SetTimer;
+            _worldStarter.OnReady -= ReleaseAll;
             _playerDeath.OnPlayerDeath -= DisableSpawn;
         }
     }

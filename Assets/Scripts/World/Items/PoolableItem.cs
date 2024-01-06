@@ -8,9 +8,10 @@ namespace RSR.World
     {
         private ObjectsPool<PoolableItem> _pool;
         public abstract ItemType ItemType { get; }
+
         private void OnEnable()
         {
-            DOVirtual.DelayedCall(15f, ReleaseSelf);
+            DOVirtual.DelayedCall(20f, ReleaseSelf);
         }
 
         public void SetPool(ObjectsPool<PoolableItem> pool)
@@ -28,7 +29,9 @@ namespace RSR.World
             if (gameObject.activeInHierarchy)
             {
                 if (_pool != null)
+                {
                     Release();
+                }
             }
         }
     }

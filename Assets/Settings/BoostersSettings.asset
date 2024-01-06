@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5174267465dac42b31f07ed6ebc891, type: 3}
   m_Name: BoostersSettings
   m_EditorClassIdentifier: 
-  boostersSpawnHeight: -0.6
+  boostersSpawnHeight: 0
   slowBoosterDuration: 10
   slowBoosterMultiplyer: 2
   speedBoosterDuration: 10

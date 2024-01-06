@@ -10,14 +10,11 @@ namespace RSR.World
     {
         public event Action OnReady;
         public event Action OnStart;
-        public event Action OnRestart;
 
         private IInputProvider _inputProvider;
         private ICurtainsService _curtainsService;
 
-        private bool _isReady;
-        private bool _isStarted;
-        private bool _isFinished;
+        private WorldState _state;
 
         public void Construct(IInputProvider inputProvider, ICurtainsService curtainsService)
         {
@@ -27,8 +24,7 @@ namespace RSR.World
 
         public void GetReady()
         {
-            _isReady = true;
-            _isStarted = false;
+            _state = WorldState.Ready;
             _curtainsService.ShowCurtain(CurtainType.Intro);
             OnReady?.Invoke();
         }
@@ -44,15 +40,15 @@ namespace RSR.World
             {
                 if (_inputProvider.HasPlayerTapped())
                 {
-                    if (CanStart())
+                    switch (_state)
                     {
-                        StartWorld();
-                        return;
-                    }
+                        case WorldState.Ready:
+                            StartWorld();
+                            break;
 
-                    if (CanRetart())
-                    {
-                        RestartWorld();
+                        case WorldState.Finished:
+                            RestartWorld(); 
+                            break;
                     }
                 }
             }
@@ -60,28 +56,16 @@ namespace RSR.World
 
         private void StartWorld()
         {
-            _isStarted = true;
-            _isFinished = false;
+            _state  = WorldState.Started;
             OnStart?.Invoke();
             _curtainsService.HideCurtains();
         }
 
         private void RestartWorld()
         {
-            _isStarted = false;
-            _isFinished = false;
-            OnRestart?.Invoke();
+            _state = WorldState.Ready;
+            OnReady?.Invoke();
             _curtainsService.ShowCurtain(CurtainType.Intro);
-        }
-
-        private bool CanStart()
-        {
-            return _isReady && !_isStarted;
-        }
-
-        private bool CanRetart()
-        {
-            return _isFinished && _isStarted;
         }
 
         private bool IsInitialized()
@@ -93,7 +77,7 @@ namespace RSR.World
         {
             DOVirtual.DelayedCall(1f, () =>
             {
-                _isFinished = true;
+                _state = WorldState.Finished;
                 _curtainsService.ShowCurtain(CurtainType.Outro);
             });
         }

@@ -52,19 +52,20 @@ namespace RSR.InternalLogic
 
             if (_activeObjects.Contains(obj))
                 _activeObjects.Remove(obj);
+
             _pool.Enqueue(obj);
             obj.gameObject.SetActive(false);
         }
 
         public void ReleaseAll()
         {
-            if (_activeObjects.Count > 0)
+            foreach (var obj in _activeObjects)
             {
-                foreach (var obj in _activeObjects)
-                {
-                    Release(obj);
-                }
+                _pool.Enqueue(obj);
+                obj.gameObject.SetActive(false);
             }
+
+            _activeObjects.Clear();
         }
 
         private void Initialize(string rootName)

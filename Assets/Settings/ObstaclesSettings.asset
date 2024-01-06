@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95cf7b3390d6dab498caeea7c34bf98b, type: 3}
   m_Name: ObstaclesSettings
   m_EditorClassIdentifier: 
+  isDestroyedByJump: 1
   lowSpawnHeight: -0.2
   highSpawnHeight: 0.1
   obstaclesRandomWeights:
