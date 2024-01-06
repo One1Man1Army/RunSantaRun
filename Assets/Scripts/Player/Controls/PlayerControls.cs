@@ -6,7 +6,7 @@ namespace RSR.Player
 {
     public sealed class PlayerControls : MonoBehaviour, IPlayerControls
     {
-        public bool IsInputEnabled { get; private set; }
+        public bool IsControlsEnabled { get; private set; }
 
         private IInputProvider _inputProvider;
         private IPlayerJump _playerJump;
@@ -20,15 +20,15 @@ namespace RSR.Player
             _playerDeath = playerDeath;
             _worldStarter = worldStarter;
 
-            _playerDeath.OnPlayerDeath += DisableInput;
-            _worldStarter.OnStart += EnableInput;
+            _playerDeath.OnPlayerDeath += DisableControls;
+            _worldStarter.OnStart += EnableControls;
         }
 
         private void Update()
         {
             if (IsInitialized())
             {
-                if (IsInputEnabled)
+                if (IsControlsEnabled)
                 {
                     JumpOnTap();
                 }
@@ -41,14 +41,14 @@ namespace RSR.Player
                 _playerJump.Jump();
         }
 
-        private void DisableInput()
+        private void DisableControls()
         {
-            IsInputEnabled = false;
+            IsControlsEnabled = false;
         }
 
-        private void EnableInput()
+        private void EnableControls()
         {
-            IsInputEnabled = true;
+            IsControlsEnabled = true;
         }
 
         private bool IsInitialized()
@@ -59,10 +59,10 @@ namespace RSR.Player
         private void OnDestroy()
         {
             if (_playerDeath != null)
-                _playerDeath.OnPlayerDeath -= DisableInput;
+                _playerDeath.OnPlayerDeath -= DisableControls;
 
             if (_worldStarter != null)
-                _worldStarter.OnStart -= EnableInput;
+                _worldStarter.OnStart -= EnableControls;
         }
     }
 }

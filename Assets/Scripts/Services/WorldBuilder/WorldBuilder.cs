@@ -26,6 +26,7 @@ namespace RSR.ServicesLogic
         private readonly IPlayerBuilder _playerBuilder;
         private readonly IWorldStarter _worldStarter;
         private readonly IBoostersSettingsProvider _boosterSettingsProvider;
+        private readonly IRandomService _randomService;
 
         private PlayerFacade _player;
         private GameObject _camera;
@@ -33,7 +34,14 @@ namespace RSR.ServicesLogic
         private IBoostersFactory _boostersFactory;
 
 
-        public WorldBuilder(IAssetsProvider assetsProvider, IInputProvider inputProvider, IGameSettingsProvider gameSettingsProvider, ICurtainsService curtainsService, IWorldStarter worldStarter, IPlayerBuilder playerBuilder, IBoostersSettingsProvider boosterSettingsProvider)
+        public WorldBuilder(IAssetsProvider assetsProvider,
+                            IInputProvider inputProvider,
+                            IGameSettingsProvider gameSettingsProvider,
+                            ICurtainsService curtainsService,
+                            IWorldStarter worldStarter,
+                            IPlayerBuilder playerBuilder,
+                            IBoostersSettingsProvider boosterSettingsProvider,
+                            IRandomService randomService)
         {
             _assetsProvider = assetsProvider;
             _inputProvider = inputProvider;
@@ -42,6 +50,7 @@ namespace RSR.ServicesLogic
             _worldStarter = worldStarter;
             _playerBuilder = playerBuilder;
             _boosterSettingsProvider = boosterSettingsProvider;
+            _randomService = randomService;
         }
 
         public async UniTask Build()
@@ -93,7 +102,7 @@ namespace RSR.ServicesLogic
         #region Boosters Factory Building
         private async UniTask BuildBoostersFactory()
         {
-            _boostersFactory = new BoostersFactory(_assetsProvider, _boosterSettingsProvider, _player);
+            _boostersFactory = new BoostersFactory(_assetsProvider, _boosterSettingsProvider, _randomService, _player);
             await _boostersFactory.Initialize();
         }
         #endregion

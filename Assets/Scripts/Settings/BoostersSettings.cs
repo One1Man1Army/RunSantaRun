@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RSR.World;
+using UnityEngine;
 
 namespace RSR.Settings
 {
@@ -7,16 +8,19 @@ namespace RSR.Settings
     {
         public float boostersSpawnHeight = -0.6f;
 
-        [Header("SlowBooster")]
+        [Header("Slow Booster")]
         public float slowBoosterDuration = 10f;
         public float slowBoosterMultiplyer = 2f;
 
-        [Header("SpeedBooster")]
+        [Header("Speed Booster")]
         public float speedBoosterDuration = 10f;
         public float speedBoosterMultiplyer = 2f;
 
-        [Header("FlyBooster")]
+        [Header("Fly Booster")]
         public float flyBoosterDuration = 10f;
         public float flyBoosterHeight = 10f;
+
+        [Header("Boosters Random Weights Table")]
+        public BoosterRandomWeight[] boostersRandomWeights;
     }
 }

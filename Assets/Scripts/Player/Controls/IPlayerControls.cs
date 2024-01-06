@@ -5,6 +5,6 @@ namespace RSR.Player
 {
     public interface IPlayerControls
     {
-        bool IsInputEnabled { get; }
+        bool IsControlsEnabled { get; }
     }
 }

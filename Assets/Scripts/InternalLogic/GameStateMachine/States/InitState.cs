@@ -5,7 +5,6 @@ using RSR.ServicesLogic;
 using RSR.World;
 using System;
 using UnityEngine;
-using System.Threading.Tasks;
 
 namespace RSR.InternalLogic
 {
@@ -63,16 +62,9 @@ namespace RSR.InternalLogic
             Services.Container.AddService<IGameStateMachine>(_gameStateMachine);
         }
 
-        private void BindWorldStarter()
-        {
-            var starter = UnityEngine.Object.Instantiate(new GameObject("World Starter")).AddComponent<WorldStarter>();
-            starter.Construct(Services.Container.GetService<IInputProvider>(), Services.Container.GetService<ICurtainsService>());
-            _services.AddService<IWorldStarter>(starter);
-        }
-
         private void BindPlayerBuilder()
         {
-            Services.Container.AddService<IPlayerBuilder>(new PlayerBuilder(
+           Services.Container.AddService<IPlayerBuilder>(new PlayerBuilder(
                 Services.Container.GetService<IAssetsProvider>(),
                 Services.Container.GetService<IInputProvider>(),
                 Services.Container.GetService<IGameSettingsProvider>(),
@@ -90,7 +82,8 @@ namespace RSR.InternalLogic
                 Services.Container.GetService<ICurtainsService>(),
                 Services.Container.GetService<IWorldStarter>(),
                 Services.Container.GetService<IPlayerBuilder>(),
-                Services.Container.GetService<IBoostersSettingsProvider>()));
+                Services.Container.GetService<IBoostersSettingsProvider>(),
+                Services.Container.GetService<IRandomService>()));
         }
 
         private async UniTask BindCurtainsService()
@@ -110,6 +103,13 @@ namespace RSR.InternalLogic
             {
                 Services.Container.GetService<ICurtainsService>().ShowCurtain(CurtainType.Loading);
             }
+        }
+
+        private void BindWorldStarter()
+        {
+            var starter = new GameObject("World Starter").AddComponent<WorldStarter>();
+            starter.Construct(Services.Container.GetService<IInputProvider>(), Services.Container.GetService<ICurtainsService>());
+            _services.AddService<IWorldStarter>(starter);
         }
 
         private async UniTask BindGameSettingsProvider()

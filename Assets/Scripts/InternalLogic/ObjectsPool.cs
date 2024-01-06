@@ -58,7 +58,7 @@ namespace RSR.InternalLogic
 
         private void Initialize(string rootName)
         {
-            _root = Object.Instantiate(new GameObject(rootName)).transform;
+            _root = new GameObject(rootName).transform;
 
             for (int i = 0; i < _startSize; i++)
             {
