@@ -16,9 +16,8 @@ namespace RSR.World
     /// Add your booster's settings to BoostersSettings if needed.
     /// If you want your booster to be spawned at CreateRandomBooster method, set it's weight at boosters' settings.
     /// </summary>
-    public sealed class BoostersFactory : IBoostersFactory
+    public sealed class BoostersFactory : ItemsFactory, IBoostersFactory
     {
-        private readonly IAssetsProvider _assetsProvider;
         private readonly IBoostersSettingsProvider _settingsProvider;
         private readonly IPlayerSpeedMultiplyer _playerSpeedMultiplyer;
         private readonly IRandomService _randomService;
@@ -27,7 +26,7 @@ namespace RSR.World
         private readonly Dictionary<int, BoosterType> _boostersRandomWeightsTable = new();
 
         //Storage with a pool for each booster type.
-        private readonly Dictionary<BoosterType, ObjectsPool<Booster>> _boostersStorage = new();
+        private readonly Dictionary<BoosterType, ObjectsPool<PoolableItem>> _boostersStorage = new();
 
         private readonly float _boostersSpawnHeight;
 
@@ -65,16 +64,15 @@ namespace RSR.World
 
         public async UniTask Initialize()
         {
-            await InitStorage();
+            await LoadPrefabs(AssetsKeys.BoostersLabel);
+            InitStorage();
             InitRndWeightsTable();
         }
 
         //Fulfills boosters' storage with pools for each booster type from all addressables "Booster"-labled prefabs.
-        private async UniTask InitStorage()
+        private void InitStorage()
         {
-            var boosters = await _assetsProvider.LoadMultiple<GameObject>(AssetsKeys.BoostersLabel);
-
-            foreach (var prefab in boosters)
+            foreach (var prefab in _prefabs)
             {
                 var booster = prefab.GetComponent<Booster>();
 
@@ -91,7 +89,7 @@ namespace RSR.World
 
         private void AddToStorage(Booster booster)
         {
-            _boostersStorage.Add(booster.Type, new ObjectsPool<Booster>(booster, 3, 10, $"{booster.Type} boosters pool"));
+            _boostersStorage.Add(booster.Type, new ObjectsPool<PoolableItem>(booster, 3, 10, $"{booster.Type} boosters pool"));
             booster.SetPool(_boostersStorage[booster.Type]);
         }
 

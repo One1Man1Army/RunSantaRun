@@ -5,6 +5,7 @@ using RSR.ServicesLogic;
 using RSR.World;
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace RSR.InternalLogic
 {
@@ -45,8 +46,9 @@ namespace RSR.InternalLogic
             BindAssetsProvider();
             BindInputProvider();
             await BindGameSettingsProvider();
-            await BindCurtainsService();
             await BindBoosetersSettingsProvider();
+            await BindObstaclesSettingsProvider();
+            await BindCurtainsService();
             BindWorldStarter();
             BindPlayerBuilder();
             BindWorldBuilder();
@@ -126,14 +128,6 @@ namespace RSR.InternalLogic
             }
         }
 
-        private void BindAssetsProvider()
-        {
-            var assetsProvider = new AssetsProvider();
-            _services.AddService<IAssetsProvider>(assetsProvider);
-
-            assetsProvider.Initialize();
-        }
-
         private async UniTask BindBoosetersSettingsProvider()
         {
             var boostersSettings = await Services.Container.GetService<IAssetsProvider>().Load<BoostersSettings>(AssetsKeys.BoostersSettingsKey);
@@ -146,6 +140,28 @@ namespace RSR.InternalLogic
             {
                 Debug.Log($"Boosters Settings loading error! {e.Message}");
             }
+        }
+
+        private async UniTask BindObstaclesSettingsProvider()
+        {
+            var obstaclesSettings = await Services.Container.GetService<IAssetsProvider>().Load<ObstaclesSettings>(AssetsKeys.ObstaclesSettingsKey);
+
+            try
+            {
+                Services.Container.AddService<IObstaclesSettingsProvider>(new ObstaclesSettingsProvider(obstaclesSettings));
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Obstacles Settings loading error! {e.Message}");
+            }
+        }
+
+        private void BindAssetsProvider()
+        {
+            var assetsProvider = new AssetsProvider();
+            _services.AddService<IAssetsProvider>(assetsProvider);
+
+            assetsProvider.Initialize();
         }
         #endregion
     }

@@ -3,9 +3,9 @@
 namespace RSR.World
 {
     [Serializable]
-    public struct ContentRandomWeight
+    public struct ItemRandomWeight
     {
-        public ContentType content;
+        public ItemType item;
         public int weight;
     }
 }

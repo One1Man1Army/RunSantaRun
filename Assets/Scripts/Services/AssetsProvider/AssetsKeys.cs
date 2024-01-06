@@ -9,5 +9,7 @@ namespace RSR.ServicesLogic
         public static string BackgroundKey = "Background";
         public static string BoostersSettingsKey = "BoostersSettings";
         public static string BoostersLabel = "Booster";
+        public static string ObstaclesSettingsKey = "ObstaclesSettings";
+        public static string ObstaclesLabel = "Obstacles";
     }
 }

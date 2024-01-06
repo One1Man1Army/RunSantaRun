@@ -1,6 +1,6 @@
 ﻿namespace RSR.World
 {
-    public enum ContentType
+    public enum ItemType
     {
         Obstacle,
         Booster

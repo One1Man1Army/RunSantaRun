@@ -25,13 +25,13 @@ namespace RSR.Settings
         [Min(0f)]
         public Vector3 backgroundPos;
 
-        [Header("Content")]
+        [Header("Items")]
         [Min(0.1f)]
         public float spawnCooldownMin = 1f;
         [Min(0.1f)]
         public float spawnCooldownMax = 5f;
         [Min(0.25f)]
         public float spawnToPlayerOffset = 10f;
-        public ContentRandomWeight[] contentRandomWeights;
+        public ItemRandomWeight[] itemsRandomWeights;
     }
 }

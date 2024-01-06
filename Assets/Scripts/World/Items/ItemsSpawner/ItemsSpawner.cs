@@ -1,32 +1,37 @@
-﻿using RSR.ServicesLogic;
+﻿using RSR.Player;
+using RSR.ServicesLogic;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace RSR.World
 {
-    public sealed class ContentSpawner : MonoBehaviour, IContentSpawner
+    public sealed class ItemsSpawner : MonoBehaviour, IItemsSpawner
     {
         private IRandomService _randomService;
         private IWorldStarter _worldStarter;
         private IGameSettingsProvider _settingsProvider;
         private IBoostersFactory _boostersFactory;
+        private IPlayerDeath _playerDeath;
         private Transform _player;
 
         //Inner content weights table, initialized from games' settings data, where we can set weights values.
-        private readonly Dictionary<int, ContentType> _contentRandomWeightsTable = new();
+        private readonly Dictionary<int, ItemType> _itemsRandomWeightsTable = new();
 
         private float _nextItemSpawnTime;
         private float _timer;
         private bool _canSpawn;
 
-        public void Construct(IGameSettingsProvider settingsProvider, IRandomService randomService, IWorldStarter worldStarter, IBoostersFactory boostersFactory, Transform player)
+        public void Construct(IGameSettingsProvider settingsProvider, IRandomService randomService, IWorldStarter worldStarter, IBoostersFactory boostersFactory, PlayerFacade player)
         {
             _randomService = randomService;
             _worldStarter = worldStarter;
             _settingsProvider = settingsProvider;
             _boostersFactory = boostersFactory;
-            _player = player;
+            _player = player.transform;
+            _playerDeath = player.Death;
 
+            _worldStarter.OnStart += EnableSpawn;
+            _playerDeath.OnPlayerDeath += DisableSpawn;
             InitRndWeightsTable();
         }
 
@@ -52,19 +57,18 @@ namespace RSR.World
                 _settingsProvider.GameSettings.spawnCooldownMin);
         }
 
-        void SpawnRandomItem()
+        private void SpawnRandomItem()
         {
             var pos = _player.position;
             pos.x += _settingsProvider.GameSettings.spawnToPlayerOffset;
 
-            var item = _randomService.GetWeightedRandomValue(_contentRandomWeightsTable);
+            var item = _randomService.GetWeightedRandomValue(_itemsRandomWeightsTable);
 
             switch (item)
             {
-                case ContentType.Obstacle:
+                case ItemType.Obstacle:
                     break;
-
-                case ContentType.Booster:
+                case ItemType.Booster:
                     _boostersFactory.CreateRandom(pos);
                     break;
             }
@@ -72,10 +76,26 @@ namespace RSR.World
 
         private void InitRndWeightsTable()
         {
-            for (int i = 0; i < _settingsProvider.GameSettings.contentRandomWeights.Length; i++)
+            for (int i = 0; i < _settingsProvider.GameSettings.itemsRandomWeights.Length; i++)
             {
-                _contentRandomWeightsTable.TryAdd(_settingsProvider.GameSettings.contentRandomWeights[i].weight, _settingsProvider.GameSettings.contentRandomWeights[i].content);
+                _itemsRandomWeightsTable.TryAdd(_settingsProvider.GameSettings.itemsRandomWeights[i].weight, _settingsProvider.GameSettings.itemsRandomWeights[i].item);
             }
+        }
+
+        private void EnableSpawn()
+        {
+            _canSpawn = true;
+        }
+
+        private void DisableSpawn()
+        {
+            _canSpawn = false;
+        }
+
+        private void OnDestroy()
+        {
+            _worldStarter.OnStart -= EnableSpawn;
+            _playerDeath.OnPlayerDeath -= DisableSpawn;
         }
     }
 }
