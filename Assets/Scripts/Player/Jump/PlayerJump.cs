@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using RSR.ServicesLogic;
-using RSR.World;
 using UnityEngine;
 
 namespace RSR.Player
@@ -36,6 +35,11 @@ namespace RSR.Player
             _jump.Play();
         }
 
+        public void Fly(float duration, float height, float amplitude)
+        {
+            InitFlySequence(duration, height, amplitude);
+        }
+
         private bool CanJump()
         {
             return _moveDirReporter.MoveDirection.y == 0 && _moveDirReporter.MoveDirection.x > 0;
@@ -43,12 +47,24 @@ namespace RSR.Player
 
         private void InitJumpSequence()
         {
-            _jump = DOTween.Sequence();
+            _jump = DOTween.Sequence()
+                .Append(transform.DOMoveY(_jumpHeight, _jumpTime / 2f).SetEase(Ease.OutQuad))
+                .Append(transform.DOMoveY(_groundHeight, _jumpTime / 2f).SetEase(Ease.InQuad))
+                .SetAutoKill(false);
+        }
 
-            _jump.Append(transform.DOMoveY(_jumpHeight, _jumpTime / 2f).SetEase(Ease.OutQuad));
-            _jump.Append(transform.DOMoveY(_groundHeight, _jumpTime / 2f).SetEase(Ease.InQuad));
+        private void InitFlySequence(float duration, float height, float amplitude)
+        {
+            _jump?.Kill();
 
-            _jump.SetAutoKill(false);
+            _jump = DOTween.Sequence()
+                .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.OutBack))
+                .Append(transform.DOMoveY(height - amplitude, duration / 6f).SetEase(Ease.InOutBack))
+                .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.InOutBack))
+                .Append(transform.DOMoveY(height - amplitude, duration / 6f).SetEase(Ease.InOutBack))
+                .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.InOutBack))
+                .Append(transform.DOMoveY(_groundHeight, duration / 6f).SetEase(Ease.InElastic))
+                .OnComplete(() => _jump = null);
         }
     }
 }

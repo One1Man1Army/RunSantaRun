@@ -71,7 +71,7 @@ namespace RSR.World
                     (instance as SpeedBooster).Constuct(_settingsProvider, _playerFacade.SpeedMultiplyer);
                     break;
                 case BoosterType.Fly:
-                    (instance as FlyBooster).Constuct(_settingsProvider);
+                    (instance as FlyBooster).Constuct(_settingsProvider, _playerFacade.Jump);
                     break;
             }
         }

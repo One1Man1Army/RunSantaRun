@@ -18,11 +18,12 @@ MonoBehaviour:
   speedBoosterDuration: 10
   speedBoosterMultiplyer: 2
   flyBoosterDuration: 10
-  flyBoosterHeight: 10
+  flyBoosterHeight: 4.5
+  flyBoosterAmplitude: 1
   boostersRandomWeights:
   - booster: 0
-    weight: 20
+    weight: 0
   - booster: 1
-    weight: 50
+    weight: 0
   - booster: 2
-    weight: 30
+    weight: 100

@@ -19,6 +19,7 @@ namespace RSR.Settings
         [Header("Fly Booster")]
         public float flyBoosterDuration = 10f;
         public float flyBoosterHeight = 10f;
+        public float flyBoosterAmplitude = 1f;
 
         [Header("Boosters Random Weights Table")]
         public BoosterRandomWeight[] boostersRandomWeights;
