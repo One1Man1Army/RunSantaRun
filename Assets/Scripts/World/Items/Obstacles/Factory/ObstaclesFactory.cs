@@ -48,10 +48,10 @@ namespace RSR.World
                 return;
             }
 
-            switch(obstacle)
+            switch (obstacle)
             {
                 case ObstacleType.Low:
-                    pos.y = _settingsProvider.ObstaclesSettings.lowSpawnHeight; 
+                    pos.y = _settingsProvider.ObstaclesSettings.lowSpawnHeight;
                     break;
                 case ObstacleType.High:
                     pos.y = _settingsProvider.ObstaclesSettings.highSpawnHeight;
@@ -59,8 +59,17 @@ namespace RSR.World
             }
 
             var instance = _obstaclesStorage[obstacle].Get(pos) as Obstacle;
+
+            if (!instance.IsConstructed)
+            {
+                ConstructObstacle(instance);
+            }
+        }
+
+        private void ConstructObstacle(Obstacle instance)
+        {
             instance.Consturct(_settingsProvider, _playerFacade.Death, _playerFacade.MoveDirReporter);
-            instance.SetPool(_obstaclesStorage[obstacle]);
+            instance.SetPool(_obstaclesStorage[instance.Type]);
         }
 
         public void CreateRandom(Vector3 pos)

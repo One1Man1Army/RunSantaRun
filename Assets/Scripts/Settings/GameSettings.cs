@@ -6,6 +6,12 @@ namespace RSR.Settings
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Settings/Game_Settings")]
     public sealed class GameSettings : ScriptableObject
     {
+        [Header("Graphics")]
+        [Min(30)]
+        public int frameRate = 60;
+        [Min(0)]
+        public int vSync = 0;
+
         [Header("Curtain")]
         [Min(0f)]
         public float curtainsFadeTime = 0.33f;

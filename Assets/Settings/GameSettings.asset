@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691f26ee3497b7c4784205c6910c6bbf, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  curtainsFadeTime: 0.33
+  frameRate: 60
+  vSync: 0
+  curtainsFadeTime: 0.5
   cameraOffset: {x: 5, y: 2.5, z: -10}
   playerSpeedMultiplyer: 3
-  playerJumpHeight: 3
+  playerJumpHeight: 5
   playerJumpTime: 0.5
   speedAddPerFrame: 0.1
-  backgroundPos: {x: 0, y: 2.5, z: 0}
+  backgroundPos: {x: 0, y: 2.5, z: 1}
   spawnCooldownMin: 0.75
   spawnCooldownMax: 2
-  spawnToPlayerOffset: 15
+  spawnToPlayerOffset: 20
   itemsRandomWeights:
   - item: 0
-    weight: 70
+    weight: 85
   - item: 1
-    weight: 30
+    weight: 15

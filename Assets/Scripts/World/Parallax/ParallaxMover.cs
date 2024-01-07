@@ -2,73 +2,38 @@ using UnityEngine;
 
 namespace RSR.Parallax
 {
-    [RequireComponent (typeof(SpriteRenderer))]
+    [RequireComponent(typeof(MeshRenderer))]
     public sealed class ParallaxMover : MonoBehaviour
     {
-        [SerializeField] private Vector2 _parallaxSpeed = Vector2.one;
+        [SerializeField] private float _parallaxSpeed;
 
         private Transform _camera;
-        private Vector3 _lastCameraPosition;
-        private float _textureUnitSizeX;
-        private float _textureUnitSizeY;
+        private Material _material;
+        private float _camStartPosX;
+        private float _distance;
+        private float _speedMultiplyer = 0.05f;
 
         private void Start()
         {
-            Initialize();
-        }
-
-        private void Initialize()
-        {
             _camera = Camera.main.transform;
-            _lastCameraPosition = _camera.transform.position;
-            var sprite = GetComponent<SpriteRenderer>().sprite;
-            var texture = sprite.texture;
-            _textureUnitSizeX = texture.width / sprite.pixelsPerUnit;
-            _textureUnitSizeY = texture.height / sprite.pixelsPerUnit;
+            _material = GetComponent<MeshRenderer>().material;
         }
 
         private void LateUpdate()
         {
-            Move();
-
-            if (IsOutOfScreenWidth())
+            if (_camera != null)
             {
-                BundgeLeft();
-            }
-
-            if (IsOutOfScreenHeight())
-            {
-                BundgeUp();
+                MoveImage();
             }
         }
 
-        private void Move()
+        private void MoveImage()
         {
-            var deltaMovement = _camera.transform.position - _lastCameraPosition;
-            transform.position += new Vector3(deltaMovement.x * _parallaxSpeed.x, deltaMovement.y * _parallaxSpeed.y, 0);
-            _lastCameraPosition = _camera.transform.position;
-        }
-
-        private void BundgeUp()
-        {
-            var offsetY = (_camera.transform.position.y - transform.position.y) % _textureUnitSizeY;
-            transform.position = new Vector3(_camera.transform.position.x, transform.position.y + offsetY, transform.position.z);
-        }
-
-        private void BundgeLeft()
-        {
-            var offsetX = (_camera.transform.position.x - transform.position.x) % _textureUnitSizeX;
-            transform.position = new Vector3(_camera.transform.position.x + offsetX, transform.position.y, transform.position.z);
-        }
-
-        private bool IsOutOfScreenWidth()
-        {
-            return Mathf.Abs(_camera.transform.position.x - transform.position.x) >= _textureUnitSizeX;
-        }
-
-        private bool IsOutOfScreenHeight()
-        {
-            return Mathf.Abs(_camera.transform.position.y - transform.position.y) >= _textureUnitSizeY;
+            _distance = _camera.transform.position.x - _camStartPosX;
+            transform.position = new Vector3(_camera.transform.position.x, transform.position.y, transform.position.z);
+            _material.SetTextureOffset("_MainTex", new Vector2(_distance, 0) * _parallaxSpeed * _speedMultiplyer);
         }
     }
 }
+
+

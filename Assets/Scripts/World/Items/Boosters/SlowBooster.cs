@@ -18,6 +18,8 @@ namespace RSR.World
 
             _duration = settingsProvider.BoostersSettings.slowBoosterDuration;
             _multiplyer = settingsProvider.BoostersSettings.slowBoosterMultiplyer;
+
+            IsConstructed = true;
         }
 
         public void OnInteract()

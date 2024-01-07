@@ -7,6 +7,8 @@ namespace RSR.Settings
     public sealed class BoostersSettings : ScriptableObject
     {
         public float boostersSpawnHeight = -0.6f;
+        public float boostersMoveSpeed = 1f;
+        public float boostersMoveHeight = 0.2f;
 
         [Header("Slow Booster")]
         public float slowBoosterDuration = 10f;

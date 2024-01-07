@@ -89,7 +89,13 @@ namespace RSR.ServicesLogic
         {
             _camera = await _assetsProvider.Instantiate(AssetsKeys.CameraKey);
 
+            BuildCameraAspectToScreenSize();
             BuildCameraFollow();
+        }
+
+        private void BuildCameraAspectToScreenSize()
+        {
+            _camera.GetOrAddComponent<CameraAspectToScreenSize>();
         }
 
         private void BuildCameraFollow()

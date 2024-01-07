@@ -46,6 +46,7 @@ namespace RSR.InternalLogic
             BindInputProvider();
             BindRandomService();
             await BindGameSettingsProvider();
+            BindFrameRateService();
             await BindBoosetersSettingsProvider();
             await BindObstaclesSettingsProvider();
             await BindCurtainsService();
@@ -132,6 +133,15 @@ namespace RSR.InternalLogic
             {
                 Debug.Log($"Game Settings loading error! {e.Message}");
             }
+        }
+
+        private void BindFrameRateService()
+        {
+            var frameRate = new FrameRateService();
+            var settings = Services.Container.GetService<IGameSettingsProvider>();
+            frameRate.SetFrameRate(settings.GameSettings.frameRate);
+            frameRate.SetVSync(settings.GameSettings.vSync);
+            Services.Container.AddService<IFrameRateService>(frameRate);
         }
 
         private async UniTask BindBoosetersSettingsProvider()

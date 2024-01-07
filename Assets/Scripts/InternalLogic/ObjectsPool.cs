@@ -37,10 +37,13 @@ namespace RSR.InternalLogic
 
         public void Release(T obj)
         {
+            if (_activeObjects.Contains(obj))
+                _activeObjects.Remove(obj);
+
             if (_pool.Count >= _maxSize)
             {
                 Debug.Log($"Pool is full! Max size is {_maxSize}. Destroying {obj.name}");
-                Object.Destroy(obj);
+                Object.Destroy(obj.gameObject);
                 return;
             }
 
@@ -49,9 +52,6 @@ namespace RSR.InternalLogic
                 Debug.Log($"Pooling {obj.name} failed! Already pooled.");
                 return;
             }
-
-            if (_activeObjects.Contains(obj))
-                _activeObjects.Remove(obj);
 
             _pool.Enqueue(obj);
             obj.gameObject.SetActive(false);

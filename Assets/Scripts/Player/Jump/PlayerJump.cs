@@ -63,7 +63,7 @@ namespace RSR.Player
                 .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.InOutBack))
                 .Append(transform.DOMoveY(height - amplitude, duration / 6f).SetEase(Ease.InOutBack))
                 .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.InOutBack))
-                .Append(transform.DOMoveY(_groundHeight, duration / 6f).SetEase(Ease.InElastic))
+                .Append(transform.DOMoveY(_groundHeight, duration / 6f).SetEase(Ease.InCirc))
                 .OnComplete(() => _jump = null);
         }
     }

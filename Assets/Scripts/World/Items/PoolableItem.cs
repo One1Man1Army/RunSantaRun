@@ -6,19 +6,28 @@ namespace RSR.World
 {
     public abstract class PoolableItem : MonoBehaviour
     {
-        private ObjectsPool<PoolableItem> _pool;
         public abstract ItemType ItemType { get; }
+        public bool IsConstructed { get; protected set; }
+
+        private ObjectsPool<PoolableItem> _pool;
 
         private Tween _selfDestroy;
+        private Vector3 _defaultScale;
 
-        private void OnEnable()
+        private void Awake()
+        {
+            _defaultScale = transform.localScale;
+        }
+        
+        protected virtual void OnEnable()
         {
             _selfDestroy = DOVirtual.DelayedCall(20f, ReleaseSelf);
+            transform.localScale = _defaultScale;
         }
 
         public void SetPool(ObjectsPool<PoolableItem> pool)
         {
-            _pool ??= pool;
+            _pool = pool;
         }
 
         protected void Release()

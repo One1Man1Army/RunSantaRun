@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: BoostersSettings
   m_EditorClassIdentifier: 
   boostersSpawnHeight: 0
+  boostersMoveSpeed: 3
+  boostersMoveHeight: 0.37
   slowBoosterDuration: 10
   slowBoosterMultiplyer: 0.5
   speedBoosterDuration: 10
@@ -22,8 +24,8 @@ MonoBehaviour:
   flyBoosterAmplitude: 1
   boostersRandomWeights:
   - booster: 0
-    weight: 0
+    weight: 30
   - booster: 1
-    weight: 0
+    weight: 50
   - booster: 2
-    weight: 100
+    weight: 20

@@ -3,6 +3,7 @@ using RSR.InternalLogic;
 using RSR.Player;
 using RSR.ServicesLogic;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RSR.World
@@ -54,13 +55,19 @@ namespace RSR.World
 
             pos.y = _boostersSpawnHeight;
             var instance = _boostersStorage[booster].Get(pos) as Booster;
-            ConstructBooster(instance);
+
+            if (!instance.IsConstructed) 
+            {
+                ConstructBooster(instance);
+            }
         }
 
         //Provides booster with all necessary dependencies.
         private void ConstructBooster(Booster instance)
         {
             instance.SetPool(_boostersStorage[instance.Type]);
+
+            BuildBoosterMove(instance);
 
             switch (instance.Type)
             {
@@ -74,6 +81,12 @@ namespace RSR.World
                     (instance as FlyBooster).Constuct(_settingsProvider, _playerFacade.Jump);
                     break;
             }
+        }
+
+        private void BuildBoosterMove(Booster instance)
+        {
+            var boosterMove = instance.GetOrAddComponent<BoosterMove>();
+            boosterMove.Construct(_settingsProvider);
         }
 
         public void CreateRandom(Vector3 pos)

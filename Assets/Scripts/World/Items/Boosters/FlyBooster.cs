@@ -20,6 +20,8 @@ namespace RSR.World
             _duration = settingsProvider.BoostersSettings.flyBoosterDuration;
             _height = settingsProvider.BoostersSettings.flyBoosterHeight;
             _amplitude = settingsProvider.BoostersSettings.flyBoosterAmplitude;
+
+            IsConstructed = true;
         }
 
         public void OnInteract()
