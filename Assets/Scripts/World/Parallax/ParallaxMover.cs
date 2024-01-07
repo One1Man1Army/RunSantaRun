@@ -61,10 +61,14 @@ namespace RSR.Parallax
             transform.position = new Vector3(_camera.transform.position.x + offsetX, transform.position.y, transform.position.z);
         }
 
-        private bool IsOutOfScreenWidth() =>
-            Mathf.Abs(_camera.transform.position.x - transform.position.x) >= _textureUnitSizeX;
+        private bool IsOutOfScreenWidth()
+        {
+            return Mathf.Abs(_camera.transform.position.x - transform.position.x) >= _textureUnitSizeX;
+        }
 
-        private bool IsOutOfScreenHeight() => 
-            Mathf.Abs(_camera.transform.position.y - transform.position.y) >= _textureUnitSizeY;
+        private bool IsOutOfScreenHeight()
+        {
+            return Mathf.Abs(_camera.transform.position.y - transform.position.y) >= _textureUnitSizeY;
+        }
     }
 }
