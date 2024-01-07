@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using RSR.Settings;
-using RSR.Curtain;
+using RSR.Curtains;
 using RSR.ServicesLogic;
 using RSR.World;
 using System;

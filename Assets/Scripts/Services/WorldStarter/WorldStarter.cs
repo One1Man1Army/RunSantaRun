@@ -1,5 +1,5 @@
 ﻿using DG.Tweening;
-using RSR.Curtain;
+using RSR.Curtains;
 using RSR.ServicesLogic;
 using System;
 using UnityEngine;

@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using RSR.CameraLogic;
+using RSR.InternalLogic;
 using RSR.Player;
 using RSR.World;
 using Unity.VisualScripting;
@@ -24,6 +25,7 @@ namespace RSR.ServicesLogic
         private readonly IGameSettingsProvider _gameSettingsProvider;
         private readonly IBoostersSettingsProvider _boosterSettingsProvider;
         private readonly IObstaclesSettingsProvider _obstaclesSettingsProvider;
+        private readonly IGameStateMachine _gameStateMachine;
         private readonly ICurtainsService _curtainsService;
         private readonly IPlayerBuilder _playerBuilder;
         private readonly IWorldStarter _worldStarter;
@@ -65,8 +67,6 @@ namespace RSR.ServicesLogic
             await BuildBoostersFactory();
             await BuildObstaclesFactory();
             BuildItemsSpawner();
-
-            _worldStarter.GetReady();
         }
 
         public async UniTask Prewarm()

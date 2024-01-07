@@ -1,4 +1,4 @@
-﻿namespace RSR.Curtain
+﻿namespace RSR.Curtains
 {
     public enum CurtainType
     {

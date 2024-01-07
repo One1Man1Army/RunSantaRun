@@ -19,7 +19,7 @@ namespace RSR.InternalLogic
 			{
 				[typeof(InitState)] = new InitState(this, services),
 				[typeof(LoadState)] = new LoadState(this, services),
-				[typeof(PlayState)] = new PlayState(this)
+				[typeof(PlayState)] = new PlayState(this, services)
 			};
 		}
 		

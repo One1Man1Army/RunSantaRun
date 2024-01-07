@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-namespace RSR.Curtain
+namespace RSR.Curtains
 {
     public sealed class CurtainsView : MonoBehaviour, ICurtainsView
     {
