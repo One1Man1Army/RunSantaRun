@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   frameRate: 60
+  maxFrameRate: 1
   vSync: 1
   timeScaleAddPerFrame: 0.05
   worldMoveSpeed: 5

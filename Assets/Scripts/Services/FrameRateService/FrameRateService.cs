@@ -9,6 +9,11 @@ namespace RSR.ServicesLogic
             Application.targetFrameRate = frameRate;
         }
 
+        public void SetMaxFrameRate()
+        {
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+        }
+
         public void SetVSync(int vSynCount)
         {
             QualitySettings.vSyncCount = vSynCount;

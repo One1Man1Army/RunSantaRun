@@ -9,6 +9,7 @@ namespace RSR.Settings
         [Header("Graphics")]
         [Min(30)]
         public int frameRate = 60;
+        public bool maxFrameRate;
         [Min(0)]
         public int vSync = 0;
 

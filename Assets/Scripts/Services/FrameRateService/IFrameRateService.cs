@@ -4,5 +4,6 @@
     {
         void SetFrameRate(int frameRate);
         void SetVSync(int vSynCount);
+        void SetMaxFrameRate();
     }
 }

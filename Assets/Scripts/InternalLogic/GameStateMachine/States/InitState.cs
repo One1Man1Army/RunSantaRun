@@ -138,7 +138,15 @@ namespace RSR.InternalLogic
         {
             var frameRate = new FrameRateService();
             var settings = Services.Container.GetService<IGameSettingsProvider>();
-            frameRate.SetFrameRate(settings.GameSettings.frameRate);
+            if (settings.GameSettings.maxFrameRate) 
+            {
+                frameRate.SetMaxFrameRate();
+            }
+            else
+            {
+                frameRate.SetFrameRate(settings.GameSettings.frameRate);
+            }
+
             frameRate.SetVSync(settings.GameSettings.vSync);
             Services.Container.AddService<IFrameRateService>(frameRate);
         }
