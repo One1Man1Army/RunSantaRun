@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed class TimeMachine : MonoBehaviour, ITimeMachine
 {
-    public float Timge { get; private set; }
+    public float CurrentTime { get; private set; }
 
     private IWorldStarter _worldStarter;
 
@@ -24,14 +24,14 @@ public sealed class TimeMachine : MonoBehaviour, ITimeMachine
     {
         if (_isSpeedingUp)
         {
-            Time.timeScale += _addPerFrame * Time.deltaTime;
+           CurrentTime += _addPerFrame * Time.deltaTime;
         }
     }
 
     private void ResetTime()
     {
         _isSpeedingUp = false;
-        Time.timeScale = 1f;
+        CurrentTime = 1f;
     }
 
     private void StartSpeedingUp()

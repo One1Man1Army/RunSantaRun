@@ -2,6 +2,6 @@
 {
     public interface ITimeMachine
     {
-        float Timge { get; }
+        float CurrentTime { get; }
     }
 }

@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRate: 60
   vSync: 1
+  timeScaleAddPerFrame: 0.05
+  worldMoveSpeed: 5
+  defaultSpeedMultiplyer: 1
   curtainsFadeTime: 0.5
   cameraPosition: {x: 5, y: 2.5, z: -10}
-  speedMultiplyer: 5
   playerJumpHeight: 5
   playerJumpTime: 0.5
-  speedAddPerFrame: 0.1
   backgroundPosition: {x: 5, y: 2.5, z: 1}
   spawnCooldownMin: 0.75
   spawnCooldownMax: 2

@@ -72,13 +72,13 @@ namespace RSR.ServicesLogic
             await BuildCamera();
             BuildMovingWorldObject();
             BuildSpeedMultiplyer();
+            BuildTimeMachine();
             BuildWorldMover();
             await BuildBoostersFactory();
             await BuildObstaclesFactory();
             BuildItemsSpawner();
             BuildItemsReleaser();
             await BuildBackground();
-            BuildTimeMachine();
         }
 
         public async UniTask Prewarm()
@@ -202,7 +202,7 @@ namespace RSR.ServicesLogic
         private void BuildWorldMover()
         {
             var mover = _movingWorld.AddComponent<WorldMover>();
-            mover.Construct(_gameSettingsProvider, _speedMultiplyer, _player.Death, _worldStarter);
+            mover.Construct(_gameSettingsProvider, _speedMultiplyer, _player.Death, _worldStarter, _timeMachine);
             _worldMover = mover;
         }
         #endregion

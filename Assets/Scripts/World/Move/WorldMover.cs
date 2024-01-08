@@ -11,15 +11,17 @@ namespace RSR.World
         private ISpeedMultiplyer _speedMultiplyer;
         private IPlayerDeath _playerDeath;
         private IWorldStarter _worldStarter;
+        private ITimeMachine _timeMachine;
 
         private bool _isMoving;
         private float _moveSpeed;
 
-        public void Construct(IGameSettingsProvider gameSettingsProvider, ISpeedMultiplyer speedMultiplyer, IPlayerDeath playerDeath, IWorldStarter worldStarter)
+        public void Construct(IGameSettingsProvider gameSettingsProvider, ISpeedMultiplyer speedMultiplyer, IPlayerDeath playerDeath, IWorldStarter worldStarter, ITimeMachine timeMachine)
         {
             _speedMultiplyer = speedMultiplyer;
             _playerDeath = playerDeath;
             _worldStarter = worldStarter;
+            _timeMachine = timeMachine;
 
             _moveSpeed = gameSettingsProvider.GameSettings.worldMoveSpeed;
 
@@ -37,7 +39,7 @@ namespace RSR.World
         {
             if (_isMoving)
             {
-                transform.Translate(Vector3.left * _moveSpeed * _speedMultiplyer.Current * Time.deltaTime);
+                transform.Translate(Vector3.left * _moveSpeed * _speedMultiplyer.Current * _timeMachine.CurrentTime * Time.deltaTime);
                 Distance = Mathf.Abs(transform.position.x);
             }
         }
