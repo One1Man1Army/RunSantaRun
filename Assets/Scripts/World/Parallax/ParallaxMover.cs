@@ -1,27 +1,25 @@
 using UnityEngine;
 
-namespace RSR.Parallax
+namespace RSR.World
 {
     [RequireComponent(typeof(MeshRenderer))]
     public sealed class ParallaxMover : MonoBehaviour
     {
+        //Set in inspector for each image individually.
         [SerializeField] private float _parallaxSpeed;
 
-        private Transform _camera;
+        private IWorldMover _worldMover;
         private Material _material;
-        private float _camStartPosX;
-        private float _distance;
-        private float _speedMultiplyer = 0.05f;
 
-        private void Start()
+        public void Construct(IWorldMover worldMover)
         {
-            _camera = Camera.main.transform;
             _material = GetComponent<MeshRenderer>().material;
+            _worldMover = worldMover;
         }
 
         private void LateUpdate()
         {
-            if (_camera != null)
+            if (_material != null)
             {
                 MoveImage();
             }
@@ -29,9 +27,7 @@ namespace RSR.Parallax
 
         private void MoveImage()
         {
-            _distance = _camera.transform.position.x - _camStartPosX;
-            transform.position = new Vector3(_camera.transform.position.x, transform.position.y, transform.position.z);
-            _material.SetTextureOffset("_MainTex", new Vector2(_distance, 0) * _parallaxSpeed * _speedMultiplyer);
+            _material.SetTextureOffset("_MainTex", new Vector2(_worldMover.Distance, 0) * _parallaxSpeed * 0.05f);
         }
     }
 }

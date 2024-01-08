@@ -10,6 +10,8 @@ namespace RSR.Player
         public event Action OnJump;
         public event Action OnLand;
 
+        private IPlayerDeath _playerDeath;
+
         private float _jumpHeight;
         private float _jumpTime;
         private float _groundHeight;
@@ -17,11 +19,14 @@ namespace RSR.Player
         private Sequence _jump;
         private bool _isJumping;
 
-        public void Construct(IGameSettingsProvider settingsProvider)
+        public void Construct(IGameSettingsProvider settingsProvider, IPlayerDeath playerDeath)
         {
             _jumpHeight = settingsProvider.GameSettings.playerJumpHeight;
             _jumpTime = settingsProvider.GameSettings.playerJumpTime;
             _groundHeight = transform.position.y;
+
+            _playerDeath = playerDeath;
+            _playerDeath.OnPlayerDeath += StopJump;
         }
 
         public void Jump()
@@ -54,8 +59,10 @@ namespace RSR.Player
                 .SetAutoKill(false)
                 .OnComplete(() =>
                 {
+                    if (_isJumping)
+                        OnLand?.Invoke();
+
                     _isJumping = false;
-                    OnLand?.Invoke();
                 });
         }
 
@@ -72,10 +79,25 @@ namespace RSR.Player
                 .Append(transform.DOMoveY(_groundHeight, duration / 6f).SetEase(Ease.InCirc))
                 .OnComplete(() => 
                 { 
-                    _isJumping = false;
                     _jump = null;
-                    OnLand?.Invoke();
+
+                    if (_isJumping)
+                        OnLand?.Invoke();
+
+                    _isJumping = false;
                 });
+        }
+
+        private void StopJump()
+        {
+            _jump?.Kill();
+            _jump = null;
+            _isJumping = false;
+        }
+
+        private void OnDestroy()
+        {
+            _playerDeath.OnPlayerDeath -= StopJump;
         }
     }
 }

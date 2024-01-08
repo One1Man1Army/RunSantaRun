@@ -84,7 +84,7 @@ namespace RSR.ServicesLogic
         private void BuildPlayerJump()
         {
             var jump = _player.GetOrAddComponent<PlayerJump>();
-            jump.Construct(_settingsProvider);
+            jump.Construct(_settingsProvider, _player.Death);
             _player.Jump = jump;
         }
 

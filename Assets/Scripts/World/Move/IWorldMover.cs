@@ -2,5 +2,6 @@
 {
     public interface IWorldMover
     {
+        public float Distance { get; }
     }
 }

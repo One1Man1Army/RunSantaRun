@@ -30,6 +30,7 @@ namespace RSR.Player
         private void GetAlive()
         {
             IsDead = false;
+            transform.position = Vector3.zero;
         }
 
         private void OnDestroy()

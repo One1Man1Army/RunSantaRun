@@ -15,12 +15,12 @@ MonoBehaviour:
   frameRate: 60
   vSync: 0
   curtainsFadeTime: 0.5
-  cameraOffset: {x: 5, y: 2.5, z: -10}
-  playerSpeedMultiplyer: 0.3
+  cameraPosition: {x: 5, y: 2.5, z: -10}
+  speedMultiplyer: 5
   playerJumpHeight: 5
   playerJumpTime: 0.5
-  speedAddPerFrame: 0.05
-  backgroundPos: {x: 0, y: 2.5, z: 1}
+  speedAddPerFrame: 0.1
+  backgroundPosition: {x: 5, y: 2.5, z: 1}
   spawnCooldownMin: 0.75
   spawnCooldownMax: 2
   spawnToPlayerOffset: 20

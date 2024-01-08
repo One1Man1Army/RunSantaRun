@@ -58,11 +58,8 @@ namespace RSR.Player
 
         private void OnDestroy()
         {
-            if (_playerDeath != null)
-                _playerDeath.OnPlayerDeath -= DisableControls;
-
-            if (_worldStarter != null)
-                _worldStarter.OnStart -= EnableControls;
+            _playerDeath.OnPlayerDeath -= DisableControls;
+            _worldStarter.OnStart -= EnableControls;
         }
     }
 }

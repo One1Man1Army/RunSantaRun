@@ -62,6 +62,7 @@ namespace RSR.World
             {
                 ConstructBooster(instance);
             }
+
             return instance;
         }
 

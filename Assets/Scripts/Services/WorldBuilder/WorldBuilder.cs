@@ -3,10 +3,8 @@ using RSR.CameraLogic;
 using RSR.InternalLogic;
 using RSR.Player;
 using RSR.World;
-using System;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.ObjectChangeEventStream;
 
 namespace RSR.ServicesLogic
 {
@@ -70,14 +68,14 @@ namespace RSR.ServicesLogic
         {
             await BuildPlayer();
             await BuildCamera();
-            await BuildBackground();
-            await BuildBoostersFactory();
-            await BuildObstaclesFactory();
             BuildMovingWorldObject();
             BuildSpeedMultiplyer();
             BuildWorldMover();
+            await BuildBoostersFactory();
+            await BuildObstaclesFactory();
             BuildItemsSpawner();
             BuildItemsReleaser();
+            await BuildBackground();
         }
 
         public async UniTask Prewarm()
@@ -98,27 +96,32 @@ namespace RSR.ServicesLogic
         #region Camera Building
         private async UniTask BuildCamera()
         {
-            _camera = await _assetsProvider.Instantiate(AssetsKeys.CameraKey);
+            _camera = await _assetsProvider.Instantiate(AssetsKeys.CameraKey, _gameSettingsProvider.GameSettings.cameraPosition);
 
             BuildCameraAspectToScreenSize();
-            BuildCameraFollow();
         }
 
         private void BuildCameraAspectToScreenSize()
         {
             _camera.GetOrAddComponent<CameraAspectToScreenSize>();
         }
-
-        private void BuildCameraFollow()
-        {
-            _camera.GetOrAddComponent<CameraFollow>().Construct(_player.transform, _gameSettingsProvider);
-        }
         #endregion
 
         #region Background Building
         private async UniTask BuildBackground()
         {
-            _background = await _assetsProvider.Instantiate(AssetsKeys.BackgroundKey, _gameSettingsProvider.GameSettings.backgroundPos);
+            _background = await _assetsProvider.Instantiate(AssetsKeys.BackgroundKey, _gameSettingsProvider.GameSettings.backgroundPosition);
+
+            BuildParallaxMovers();
+        }
+
+        private void BuildParallaxMovers()
+        {
+            var parallaxMovers = _background.GetComponentsInChildren<ParallaxMover>();
+            foreach (var parallaxMover in parallaxMovers)
+            {
+                parallaxMover.Construct(_worldMover);
+            }
         }
         #endregion
 
@@ -158,6 +161,7 @@ namespace RSR.ServicesLogic
 
             gObj.AddComponent<Rigidbody2D>().isKinematic = true;
             gObj.AddComponent<BoxCollider2D>().isTrigger = true;
+
             gObj.transform.localScale = new Vector3(1f, 50f, 1f);
 
             var releaser = gObj.AddComponent<ItemsReleaser>();
@@ -174,6 +178,15 @@ namespace RSR.ServicesLogic
         private void BuildMovingWorldObject()
         {
             _movingWorld = new GameObject(Constants.MovingWorldName).transform;
+
+            BuildMovingWorldRigidbody();
+        }
+
+        private void BuildMovingWorldRigidbody()
+        {
+            var body = _movingWorld.AddComponent<Rigidbody2D>();
+            body.isKinematic = true;
+            body.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
         private void BuildSpeedMultiplyer()

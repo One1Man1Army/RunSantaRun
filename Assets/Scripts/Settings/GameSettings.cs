@@ -17,7 +17,7 @@ namespace RSR.Settings
         public float curtainsFadeTime = 0.33f;
 
         [Header("Camera")]
-        public Vector3 cameraOffset;
+        public Vector3 cameraPosition;
 
         [Header("Player")]
         [Min(0f)]
@@ -29,7 +29,7 @@ namespace RSR.Settings
         public float speedAddPerFrame = 0.1f;
 
         [Header("Background")]
-        public Vector3 backgroundPos;
+        public Vector3 backgroundPosition;
 
         [Header("Items")]
         [Min(0.1f)]

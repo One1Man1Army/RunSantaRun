@@ -5,6 +5,8 @@ namespace RSR.World
 {
     public sealed class WorldMover : MonoBehaviour, IWorldMover
     {
+        public float Distance { get; private set; }
+
         private ISpeedMultiplyer _speedMultiplyer;
         private IPlayerDeath _playerDeath;
         private IWorldStarter _worldStarter;
@@ -32,6 +34,7 @@ namespace RSR.World
             if (_isMoving)
             {
                 transform.Translate(Vector3.left * _speedMultiplyer.Current * _speedMultiplyer.Acceleration * Time.deltaTime);
+                Distance = Mathf.Abs(transform.position.x);
             }
         }
 
@@ -52,14 +55,9 @@ namespace RSR.World
 
         private void OnDestroy()
         {
-            if (_playerDeath != null)
-                _playerDeath.OnPlayerDeath -= Stop;
-
-            if (_worldStarter != null)
-            {
-                _worldStarter.OnReady -= ResetPosition;
-                _worldStarter.OnStart -= StartMoving;
-            }
+            _worldStarter.OnReady -= ResetPosition;
+            _worldStarter.OnStart -= StartMoving;
+            _playerDeath.OnPlayerDeath -= Stop;
         }
     }
 }

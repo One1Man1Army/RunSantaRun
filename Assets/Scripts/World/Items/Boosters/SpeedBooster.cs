@@ -7,14 +7,14 @@ namespace RSR.World
     {
         public override BoosterType Type => BoosterType.Speed;
 
-        ISpeedMultiplyer _playerSpeedMultiplyer;
+        ISpeedMultiplyer _speedMultiplyer;
 
         private float _duration;
         private float _multiplyer;
 
-        public void Constuct(IBoostersSettingsProvider settingsProvider, ISpeedMultiplyer playerSpeedMultiplyer)
+        public void Constuct(IBoostersSettingsProvider settingsProvider, ISpeedMultiplyer speedMultiplyer)
         {
-            _playerSpeedMultiplyer = playerSpeedMultiplyer;
+            _speedMultiplyer = speedMultiplyer;
 
             _duration = settingsProvider.BoostersSettings.speedBoosterDuration;
             _multiplyer = settingsProvider.BoostersSettings.speedBoosterMultiplyer;
@@ -24,7 +24,7 @@ namespace RSR.World
 
         public void OnInteract()
         {
-            _playerSpeedMultiplyer.Boost(_multiplyer, _duration);
+            _speedMultiplyer.Boost(_multiplyer, _duration);
             Release();
         }
     }

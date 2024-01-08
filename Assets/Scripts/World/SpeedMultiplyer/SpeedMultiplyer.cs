@@ -48,7 +48,7 @@ namespace RSR.World
         {
             if (_isAccelerating)
             {
-                Acceleration += _settingsProvider.GameSettings.speedAddPerFrame;
+                Acceleration += _settingsProvider.GameSettings.speedAddPerFrame * Time.deltaTime;
             }
         }
 
