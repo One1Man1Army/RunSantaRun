@@ -3,8 +3,10 @@ using RSR.CameraLogic;
 using RSR.InternalLogic;
 using RSR.Player;
 using RSR.World;
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.ObjectChangeEventStream;
 
 namespace RSR.ServicesLogic
 {
@@ -31,12 +33,17 @@ namespace RSR.ServicesLogic
         private readonly IWorldStarter _worldStarter;
         private readonly IRandomService _randomService;
 
+        //All game world's units.
         private PlayerFacade _player;
         private GameObject _camera;
         private GameObject _background;
+        private Transform _movingWorld;
+        private ISpeedMultiplyer _speedMultiplyer;
+        private IWorldMover _worldMover;
         private IBoostersFactory _boostersFactory;
         private IObstaclesFactory _obstaclesFactory;
         private IItemsSpawner _itemsSpawner;
+        private IItemsReleaser _itemsReleaser;
 
         public WorldBuilder(IAssetsProvider assetsProvider,
                             IInputProvider inputProvider,
@@ -66,7 +73,11 @@ namespace RSR.ServicesLogic
             await BuildBackground();
             await BuildBoostersFactory();
             await BuildObstaclesFactory();
+            BuildMovingWorldObject();
+            BuildSpeedMultiplyer();
+            BuildWorldMover();
             BuildItemsSpawner();
+            BuildItemsReleaser();
         }
 
         public async UniTask Prewarm()
@@ -114,7 +125,7 @@ namespace RSR.ServicesLogic
         #region Factories Building
         private async UniTask BuildBoostersFactory()
         {
-            _boostersFactory = new BoostersFactory(_assetsProvider, _boosterSettingsProvider, _randomService, _player);
+            _boostersFactory = new BoostersFactory(_assetsProvider, _boosterSettingsProvider, _randomService, _player.Jump, _speedMultiplyer);
             await _boostersFactory.Initialize();
         }
 
@@ -128,9 +139,55 @@ namespace RSR.ServicesLogic
         #region Items Spawner Building
         private void BuildItemsSpawner()
         {
-            var spawner = new GameObject("Items Spawner").AddComponent<ItemsSpawner>();
-            spawner.Construct(_gameSettingsProvider, _randomService, _worldStarter, _boostersFactory, _obstaclesFactory, _player);
+            var spawner = new GameObject(Constants.ItemsSpawnerName).AddComponent<ItemsSpawner>();
+
+            spawner.Construct(_gameSettingsProvider, _randomService, _worldStarter, _boostersFactory, _obstaclesFactory, _player.Death, _movingWorld);
+
+            spawner.transform.position = new(_player.transform.position.x + _gameSettingsProvider.GameSettings.spawnToPlayerOffset,
+                                                _player.transform.position.y,
+                                                _player.transform.position.z);
+
             _itemsSpawner = spawner;
+        }
+        #endregion
+
+        #region Items Releaser Building
+        private void BuildItemsReleaser()
+        {
+            var gObj = new GameObject(Constants.ItemsReleaserName);
+
+            gObj.AddComponent<Rigidbody2D>().isKinematic = true;
+            gObj.AddComponent<BoxCollider2D>().isTrigger = true;
+            gObj.transform.localScale = new Vector3(1f, 50f, 1f);
+
+            var releaser = gObj.AddComponent<ItemsReleaser>();
+
+            releaser.transform.position = new(_player.transform.position.x - _gameSettingsProvider.GameSettings.spawnToPlayerOffset,
+                _player.transform.position.y,
+                _player.transform.position.z);
+
+            _itemsReleaser = releaser;
+        }
+        #endregion
+
+        #region Moving World Building
+        private void BuildMovingWorldObject()
+        {
+            _movingWorld = new GameObject(Constants.MovingWorldName).transform;
+        }
+
+        private void BuildSpeedMultiplyer()
+        {
+            var multiplyer = _movingWorld.AddComponent<SpeedMultiplyer>();
+            multiplyer.Construct(_gameSettingsProvider, _worldStarter);
+            _speedMultiplyer = multiplyer;
+        }
+
+        private void BuildWorldMover()
+        {
+            var mover = _movingWorld.AddComponent<WorldMover>();
+            mover.Construct(_speedMultiplyer, _player.Death, _worldStarter);
+            _worldMover = mover;
         }
         #endregion
     }

@@ -1,23 +1,24 @@
 ﻿using DG.Tweening;
 using RSR.ServicesLogic;
+using System;
 using UnityEngine;
 
 namespace RSR.Player
 {
     public sealed class PlayerJump : MonoBehaviour, IPlayerJump
     {
-        private IPlayerMoveDirReporter _moveDirReporter;
+        public event Action OnJump;
+        public event Action OnLand;
 
         private float _jumpHeight;
         private float _jumpTime;
         private float _groundHeight;
 
         private Sequence _jump;
+        private bool _isJumping;
 
-        public void Construct(IGameSettingsProvider settingsProvider, IPlayerMoveDirReporter moveDirReporter)
+        public void Construct(IGameSettingsProvider settingsProvider)
         {
-            _moveDirReporter = moveDirReporter;
-
             _jumpHeight = settingsProvider.GameSettings.playerJumpHeight;
             _jumpTime = settingsProvider.GameSettings.playerJumpTime;
             _groundHeight = transform.position.y;
@@ -25,24 +26,24 @@ namespace RSR.Player
 
         public void Jump()
         {
-            if (!CanJump())
+            if (_isJumping)
                 return;
 
             if (_jump == null)
                 InitJumpSequence();
 
+            _isJumping = true;
             _jump.Rewind();
             _jump.Play();
+
+            OnJump?.Invoke();
         }
 
         public void Fly(float duration, float height, float amplitude)
         {
             InitFlySequence(duration, height, amplitude);
-        }
-
-        private bool CanJump()
-        {
-            return _moveDirReporter.MoveDirection.y == 0 && _moveDirReporter.MoveDirection.x > 0;
+            _isJumping = true;
+            OnJump?.Invoke();
         }
 
         private void InitJumpSequence()
@@ -50,7 +51,12 @@ namespace RSR.Player
             _jump = DOTween.Sequence()
                 .Append(transform.DOMoveY(_jumpHeight, _jumpTime / 2f).SetEase(Ease.OutQuad))
                 .Append(transform.DOMoveY(_groundHeight, _jumpTime / 2f).SetEase(Ease.InQuad))
-                .SetAutoKill(false);
+                .SetAutoKill(false)
+                .OnComplete(() =>
+                {
+                    _isJumping = false;
+                    OnLand?.Invoke();
+                });
         }
 
         private void InitFlySequence(float duration, float height, float amplitude)
@@ -64,7 +70,12 @@ namespace RSR.Player
                 .Append(transform.DOMoveY(height - amplitude, duration / 6f).SetEase(Ease.InOutBack))
                 .Append(transform.DOMoveY(height + amplitude, duration / 6f).SetEase(Ease.InOutBack))
                 .Append(transform.DOMoveY(_groundHeight, duration / 6f).SetEase(Ease.InCirc))
-                .OnComplete(() => _jump = null);
+                .OnComplete(() => 
+                { 
+                    _isJumping = false;
+                    _jump = null;
+                    OnLand?.Invoke();
+                });
         }
     }
 }

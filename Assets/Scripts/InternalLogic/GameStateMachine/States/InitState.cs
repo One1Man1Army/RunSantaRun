@@ -76,7 +76,6 @@ namespace RSR.InternalLogic
                 Services.Container.GetService<IAssetsProvider>(),
                 Services.Container.GetService<IInputProvider>(),
                 Services.Container.GetService<IGameSettingsProvider>(),
-                Services.Container.GetService<ICurtainsService>(),
                 Services.Container.GetService<IWorldStarter>()));
         }
 

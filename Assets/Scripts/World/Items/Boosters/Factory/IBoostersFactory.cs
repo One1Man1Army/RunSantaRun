@@ -5,8 +5,8 @@ namespace RSR.World
 {
     public interface IBoostersFactory
     {
-        void Create(BoosterType booster, Vector3 pos);
-        void CreateRandom(Vector3 pos);
+        Booster Create(BoosterType booster, Vector3 pos);
+        Booster CreateRandom(Vector3 pos);
         UniTask Initialize();
         void ReleaseAll();
     }

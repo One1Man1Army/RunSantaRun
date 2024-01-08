@@ -40,12 +40,12 @@ namespace RSR.World
         #region Spawning
 
         //Spawns obstacle and provides it with all necessary dependencies.
-        public void Create(ObstacleType obstacle, Vector3 pos)
+        public Obstacle Create(ObstacleType obstacle, Vector3 pos)
         {
             if (!_obstaclesStorage.ContainsKey(obstacle))
             {
                 Debug.Log($"Creating a {obstacle} failed! No such obstacle in storage.");
-                return;
+                return null;
             }
 
             switch (obstacle)
@@ -64,6 +64,8 @@ namespace RSR.World
             {
                 ConstructObstacle(instance);
             }
+
+            return instance;
         }
 
         private void ConstructObstacle(Obstacle instance)
@@ -72,9 +74,9 @@ namespace RSR.World
             instance.SetPool(_obstaclesStorage[instance.Type]);
         }
 
-        public void CreateRandom(Vector3 pos)
+        public Obstacle CreateRandom(Vector3 pos)
         {
-            Create(_randomService.GetWeightedRandomValue(_obstaclesRandomWeightsTable), pos);
+            return Create(_randomService.GetWeightedRandomValue(_obstaclesRandomWeightsTable), pos);
         }
 
         public void ReleaseAll()

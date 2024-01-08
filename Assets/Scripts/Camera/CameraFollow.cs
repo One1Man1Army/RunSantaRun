@@ -7,6 +7,9 @@ namespace RSR.CameraLogic
     {
         private Transform _player;
         private Vector3 _offset;
+        private float _smoothDamp = 0.25f;
+
+        private Vector3 _velocity;
 
         public void Construct(Transform player, IGameSettingsProvider settingsProvider)
         {
@@ -20,16 +23,22 @@ namespace RSR.CameraLogic
                 FollowPlayer();
         }
 
+        private void FollowPlayer()
+        {
+            Vector3 targetPosition = new(_player.position.x + _offset.x, _offset.y, _player.position.z + _offset.z);
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _velocity, _smoothDamp);
+        }
+
         private bool IsPlayerInitialized()
         {
             return _player != null;
         }
 
-        private void FollowPlayer()
+/*        private void FollowPlayer()
         {
             var newPos = _player.position + _offset;
             newPos.y = _offset.y;
             transform.position = newPos;
-        }
+        }*/
     }
 }

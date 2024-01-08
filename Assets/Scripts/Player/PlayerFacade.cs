@@ -9,9 +9,7 @@ namespace RSR.Player
     /// </summary>
     public sealed class PlayerFacade : MonoBehaviour
     {
-        public IPlayerSpeedMultiplyer SpeedMultiplyer { get; set; }
         public IPlayerMoveDirReporter MoveDirReporter { get; set; }
-        public IPlayerMove Move { get; set; }
         public IPlayerJump Jump { get; set; }
         public IPlayerControls Controls { get; set; }
         public IPlayerDeath Death { get; set; }

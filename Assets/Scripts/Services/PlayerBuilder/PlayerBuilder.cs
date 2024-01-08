@@ -16,17 +16,15 @@ namespace RSR.ServicesLogic
         private readonly IAssetsProvider _assetsProvider;
         private readonly IInputProvider _inputProvider;
         private readonly IGameSettingsProvider _settingsProvider;
-        private readonly ICurtainsService _curtainsService;
         private readonly IWorldStarter _worldStarter;
 
         private PlayerFacade _player;
 
-        public PlayerBuilder(IAssetsProvider assetsProvider, IInputProvider inputProvider, IGameSettingsProvider settingsProvider, ICurtainsService curtainsService, IWorldStarter worldStarter)
+        public PlayerBuilder(IAssetsProvider assetsProvider, IInputProvider inputProvider, IGameSettingsProvider settingsProvider, IWorldStarter worldStarter)
         {
             _assetsProvider = assetsProvider;
             _inputProvider = inputProvider;
             _settingsProvider = settingsProvider;
-            _curtainsService = curtainsService;
             _worldStarter = worldStarter;
         }
 
@@ -35,9 +33,7 @@ namespace RSR.ServicesLogic
             await CreatePlayer();
 
             BuildPlayerDeath();
-            BuildPlayerSpeedMultiplyer();
             BuildPlayerMoveDirReporter();
-            BuildPlayerMove();
             BuildPlayerJump();
             BuildPlayerControls();
             BuildPlayerInteractor();
@@ -61,7 +57,7 @@ namespace RSR.ServicesLogic
         private void BuildPlayerAnimator()
         {
             var animator = _player.GetOrAddComponent<PlayerAnimator>();
-            animator.Construct(_player.MoveDirReporter, _player.Death, _worldStarter);
+            animator.Construct(_worldStarter, _player.Jump, _player.Death);
             _player.Animator = animator;
         }
 
@@ -88,7 +84,7 @@ namespace RSR.ServicesLogic
         private void BuildPlayerJump()
         {
             var jump = _player.GetOrAddComponent<PlayerJump>();
-            jump.Construct(_settingsProvider, _player.MoveDirReporter);
+            jump.Construct(_settingsProvider);
             _player.Jump = jump;
         }
 
@@ -96,19 +92,6 @@ namespace RSR.ServicesLogic
         {
             var interactor = _player.GetOrAddComponent<PlayerInteractor>();
             _player.Interactor = interactor;
-        }
-
-        private void BuildPlayerMove()
-        {
-            var move = _player.GetOrAddComponent<PlayerMove>();
-            move.Construct(_player.SpeedMultiplyer, _player.Death, _worldStarter);
-        }
-
-        private void BuildPlayerSpeedMultiplyer()
-        {
-            var speedMultiplyer = _player.GetOrAddComponent<PlayerSpeedMultiplyer>();
-            speedMultiplyer.Construct(_settingsProvider, _worldStarter);
-            _player.SpeedMultiplyer = speedMultiplyer;
         }
         #endregion
     }

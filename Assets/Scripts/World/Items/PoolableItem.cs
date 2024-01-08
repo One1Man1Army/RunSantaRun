@@ -11,7 +11,6 @@ namespace RSR.World
 
         private ObjectsPool<PoolableItem> _pool;
 
-        private Tween _selfDestroy;
         private Vector3 _defaultScale;
 
         private void Awake()
@@ -21,7 +20,6 @@ namespace RSR.World
         
         protected virtual void OnEnable()
         {
-            _selfDestroy = DOVirtual.DelayedCall(20f, ReleaseSelf);
             transform.localScale = _defaultScale;
         }
 
@@ -30,25 +28,9 @@ namespace RSR.World
             _pool = pool;
         }
 
-        protected void Release()
+        public void Release()
         {
             _pool.Release(this);
-        }
-
-        private void ReleaseSelf()
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                if (_pool != null)
-                {
-                    Release();
-                }
-            }
-        }
-
-        private void OnDisable()
-        {
-            _selfDestroy?.Kill();
         }
     }
 }

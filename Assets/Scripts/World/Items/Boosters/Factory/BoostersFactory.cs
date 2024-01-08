@@ -22,7 +22,8 @@ namespace RSR.World
         #region Fields
         private readonly IBoostersSettingsProvider _settingsProvider;
         private readonly IRandomService _randomService;
-        private readonly PlayerFacade _playerFacade;
+        private readonly IPlayerJump _playerJump;
+        private readonly ISpeedMultiplyer _speedMultiplyer;
 
         //Inner boosters weights table, initialized from boosters' settings data, where we can set weights values.
         private readonly Dictionary<int, BoosterType> _boostersRandomWeightsTable = new();
@@ -33,24 +34,25 @@ namespace RSR.World
         private readonly float _boostersSpawnHeight;
         #endregion
 
-        public BoostersFactory(IAssetsProvider assetsProvider, IBoostersSettingsProvider settingsProvider, IRandomService randomService, PlayerFacade player) 
+        public BoostersFactory(IAssetsProvider assetsProvider, IBoostersSettingsProvider settingsProvider, IRandomService randomService, IPlayerJump playerJump, ISpeedMultiplyer speedMultiplyer) 
         {
             _settingsProvider = settingsProvider;
             _assetsProvider = assetsProvider;
             _randomService = randomService;
-            _playerFacade = player;
+            _playerJump = playerJump;
+            _speedMultiplyer = speedMultiplyer;
 
             _boostersSpawnHeight = settingsProvider.BoostersSettings.boostersSpawnHeight;
         }
 
         #region Spawning
 
-        public void Create(BoosterType booster, Vector3 pos)
+        public Booster Create(BoosterType booster, Vector3 pos)
         {
             if (!_boostersStorage.ContainsKey(booster))
             {
                 Debug.Log($"Creating a {booster} failed! No such booster in storage.");
-                return;
+                return null;
             }
 
             pos.y = _boostersSpawnHeight;
@@ -60,6 +62,7 @@ namespace RSR.World
             {
                 ConstructBooster(instance);
             }
+            return instance;
         }
 
         //Provides booster with all necessary dependencies.
@@ -72,13 +75,13 @@ namespace RSR.World
             switch (instance.Type)
             {
                 case BoosterType.Slow:
-                    (instance as SlowBooster).Constuct(_settingsProvider, _playerFacade.SpeedMultiplyer);
+                    (instance as SlowBooster).Constuct(_settingsProvider, _speedMultiplyer);
                     break;
                 case BoosterType.Speed:
-                    (instance as SpeedBooster).Constuct(_settingsProvider, _playerFacade.SpeedMultiplyer);
+                    (instance as SpeedBooster).Constuct(_settingsProvider, _speedMultiplyer);
                     break;
                 case BoosterType.Fly:
-                    (instance as FlyBooster).Constuct(_settingsProvider, _playerFacade.Jump);
+                    (instance as FlyBooster).Constuct(_settingsProvider, _playerJump);
                     break;
             }
         }
@@ -89,9 +92,9 @@ namespace RSR.World
             boosterMove.Construct(_settingsProvider);
         }
 
-        public void CreateRandom(Vector3 pos)
+        public Booster CreateRandom(Vector3 pos)
         {
-            Create(_randomService.GetWeightedRandomValue(_boostersRandomWeightsTable), pos);
+            return Create(_randomService.GetWeightedRandomValue(_boostersRandomWeightsTable), pos);
         }
 
         public void ReleaseAll()

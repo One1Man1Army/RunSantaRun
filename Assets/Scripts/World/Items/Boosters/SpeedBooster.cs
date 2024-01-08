@@ -7,12 +7,12 @@ namespace RSR.World
     {
         public override BoosterType Type => BoosterType.Speed;
 
-        IPlayerSpeedMultiplyer _playerSpeedMultiplyer;
+        ISpeedMultiplyer _playerSpeedMultiplyer;
 
         private float _duration;
         private float _multiplyer;
 
-        public void Constuct(IBoostersSettingsProvider settingsProvider, IPlayerSpeedMultiplyer playerSpeedMultiplyer)
+        public void Constuct(IBoostersSettingsProvider settingsProvider, ISpeedMultiplyer playerSpeedMultiplyer)
         {
             _playerSpeedMultiplyer = playerSpeedMultiplyer;
 

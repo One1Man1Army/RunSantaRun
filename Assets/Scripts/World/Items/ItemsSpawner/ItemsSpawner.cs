@@ -13,7 +13,7 @@ namespace RSR.World
         private IBoostersFactory _boostersFactory;
         private IObstaclesFactory _obstaclesFactory;
         private IPlayerDeath _playerDeath;
-        private Transform _player;
+        private Transform _world;
 
         //Inner content weights table, initialized from games' settings data, where we can set weights values.
         private readonly Dictionary<int, ItemType> _itemsRandomWeightsTable = new();
@@ -22,15 +22,21 @@ namespace RSR.World
         private float _timer;
         private bool _canSpawn;
 
-        public void Construct(IGameSettingsProvider settingsProvider, IRandomService randomService, IWorldStarter worldStarter, IBoostersFactory boostersFactory, IObstaclesFactory obstaclesFactory, PlayerFacade player)
+        public void Construct(IGameSettingsProvider settingsProvider,
+                              IRandomService randomService,
+                              IWorldStarter worldStarter,
+                              IBoostersFactory boostersFactory,
+                              IObstaclesFactory obstaclesFactory,
+                              IPlayerDeath playerDeath,
+                              Transform world)
         {
             _randomService = randomService;
             _worldStarter = worldStarter;
             _settingsProvider = settingsProvider;
             _boostersFactory = boostersFactory;
             _obstaclesFactory = obstaclesFactory;
-            _player = player.transform;
-            _playerDeath = player.Death;
+            _world = world;
+            _playerDeath = playerDeath;
 
             _worldStarter.OnStart += EnableSpawn;
             _worldStarter.OnStart += SetTimer;
@@ -64,18 +70,15 @@ namespace RSR.World
 
         private void SpawnRandomItem()
         {
-            var pos = _player.position;
-            pos.x += _settingsProvider.GameSettings.spawnToPlayerOffset;
-
             var item = _randomService.GetWeightedRandomValue(_itemsRandomWeightsTable);
 
             switch (item)
             {
                 case ItemType.Obstacle:
-                    _obstaclesFactory.CreateRandom(pos);
+                    _obstaclesFactory.CreateRandom(transform.position).transform.SetParent(_world, true);
                     break;
                 case ItemType.Booster:
-                    _boostersFactory.CreateRandom(pos);
+                    _boostersFactory.CreateRandom(transform.position).transform.SetParent(_world, true);
                     break;
             }
         }

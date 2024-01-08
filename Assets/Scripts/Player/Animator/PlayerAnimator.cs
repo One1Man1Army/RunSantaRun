@@ -1,5 +1,4 @@
 ﻿using RSR.World;
-using System;
 using UnityEngine;
 
 namespace RSR.Player
@@ -7,65 +6,54 @@ namespace RSR.Player
     [RequireComponent(typeof(Animator))]
     public sealed class PlayerAnimator : MonoBehaviour, IPlayerAnimator
     {
-        private IPlayerMoveDirReporter _moveDirReporter;
-        private IPlayerDeath _playerDeath;
         private IWorldStarter _worldStarter;
+        private IPlayerJump _playerJump;
+        private IPlayerDeath _playerDeath;
 
         private Animator _animator;
 
-        public void Construct(IPlayerMoveDirReporter moveDirReporter, IPlayerDeath playerDeath, IWorldStarter worldStarter)
+        public void Construct(IWorldStarter worldStarter, IPlayerJump playerJump, IPlayerDeath playerDeath)
         {
-            _moveDirReporter = moveDirReporter;
+            _playerJump = playerJump;
             _playerDeath = playerDeath;
             _worldStarter = worldStarter;
 
-            _playerDeath.OnPlayerDeath += PlayDeath;
+            _playerDeath.OnPlayerDeath += PlayDie;
+            _playerJump.OnJump += PlayJump;
+            _playerJump.OnLand += PlayRun;
             _worldStarter.OnReady += PlayIdle;
+            _worldStarter.OnStart += PlayRun;
 
             _animator = GetComponent<Animator>();
         }
 
-        private void Update()
+        private void PlayDie()
         {
-            if (IsInitialized())
-            {
-                if (!_playerDeath.IsDead)
-                {
-                    SetAnimatorValues();
-                }
-            }
+            _animator.Play(AnimatorHashKeys.DieHash);
         }
-
-        private void SetAnimatorValues()
-        {
-            _animator.SetFloat(AnimatorHashKeys.MoveDirXHash, _moveDirReporter.MoveDirection.x);
-            _animator.SetFloat(AnimatorHashKeys.MoveDirYHash, _moveDirReporter.MoveDirection.y);
-
-        }
-
-        private void PlayDeath()
-        {
-            _animator.SetTrigger(AnimatorHashKeys.DieHash);
-        }
-
 
         private void PlayIdle()
         {
-            _animator.SetTrigger(AnimatorHashKeys.IdleHash);
+            _animator.Play(AnimatorHashKeys.IdleHash);
         }
 
-        private bool IsInitialized()
+        private void PlayRun()
         {
-            return _moveDirReporter != null && _playerDeath != null && _animator != null;
+            _animator.Play(AnimatorHashKeys.RunHash);
+        }
+
+        private void PlayJump()
+        {
+            _animator.Play(AnimatorHashKeys.JumpHash);
         }
 
         private void OnDestroy()
         {
-            if (_playerDeath != null)
-                _playerDeath.OnPlayerDeath -= PlayDeath;
-
-            if (_worldStarter != null)
-                _worldStarter.OnReady -= PlayIdle;
+            _playerDeath.OnPlayerDeath -= PlayDie;
+            _playerJump.OnJump -= PlayJump;
+            _playerJump.OnLand -= PlayRun;
+            _worldStarter.OnReady -= PlayIdle;
+            _worldStarter.OnStart -= PlayRun;
         }
     }
 }

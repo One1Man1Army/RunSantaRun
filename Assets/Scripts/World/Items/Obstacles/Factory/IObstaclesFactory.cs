@@ -5,8 +5,8 @@ namespace RSR.World
 {
     public interface IObstaclesFactory
     {
-        void Create(ObstacleType booster, Vector3 pos);
-        void CreateRandom(Vector3 pos);
+        Obstacle Create(ObstacleType booster, Vector3 pos);
+        Obstacle CreateRandom(Vector3 pos);
         UniTask Initialize();
         void ReleaseAll();
     }

@@ -21,7 +21,7 @@ namespace RSR.Settings
 
         [Header("Player")]
         [Min(0f)]
-        public float playerSpeedMultiplyer = 1f;
+        public float speedMultiplyer = 1f;
         [Min(0.1f)]
         public float playerJumpHeight = 1f;
         [Min(0.1f)]
