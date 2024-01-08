@@ -3,6 +3,7 @@ using RSR.CameraLogic;
 using RSR.InternalLogic;
 using RSR.Player;
 using RSR.World;
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ namespace RSR.ServicesLogic
         private IObstaclesFactory _obstaclesFactory;
         private IItemsSpawner _itemsSpawner;
         private IItemsReleaser _itemsReleaser;
+        private ITimeMachine _timeMachine;
 
         public WorldBuilder(IAssetsProvider assetsProvider,
                             IInputProvider inputProvider,
@@ -76,6 +78,7 @@ namespace RSR.ServicesLogic
             BuildItemsSpawner();
             BuildItemsReleaser();
             await BuildBackground();
+            BuildTimeMachine();
         }
 
         public async UniTask Prewarm()
@@ -199,8 +202,17 @@ namespace RSR.ServicesLogic
         private void BuildWorldMover()
         {
             var mover = _movingWorld.AddComponent<WorldMover>();
-            mover.Construct(_speedMultiplyer, _player.Death, _worldStarter);
+            mover.Construct(_gameSettingsProvider, _speedMultiplyer, _player.Death, _worldStarter);
             _worldMover = mover;
+        }
+        #endregion
+
+        #region Time Machine Building
+        private void BuildTimeMachine()
+        {
+            var machine = new GameObject(Constants.TimeMachineName).AddComponent<TimeMachine>();
+            machine.Construct(_gameSettingsProvider, _worldStarter);
+            _timeMachine = machine;
         }
         #endregion
     }

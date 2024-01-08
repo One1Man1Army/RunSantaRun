@@ -12,6 +12,13 @@ namespace RSR.Settings
         [Min(0)]
         public int vSync = 0;
 
+        [Header("Time")]
+        public float timeScaleAddPerFrame = 0.001f;
+
+        [Header("World")]
+        public float worldMoveSpeed = 1f;
+        public float defaultSpeedMultiplyer = 1f;
+
         [Header("Curtain")]
         [Min(0f)]
         public float curtainsFadeTime = 0.33f;
@@ -20,13 +27,10 @@ namespace RSR.Settings
         public Vector3 cameraPosition;
 
         [Header("Player")]
-        [Min(0f)]
-        public float speedMultiplyer = 1f;
         [Min(0.1f)]
         public float playerJumpHeight = 1f;
         [Min(0.1f)]
         public float playerJumpTime = 0.1f;
-        public float speedAddPerFrame = 0.1f;
 
         [Header("Background")]
         public Vector3 backgroundPosition;

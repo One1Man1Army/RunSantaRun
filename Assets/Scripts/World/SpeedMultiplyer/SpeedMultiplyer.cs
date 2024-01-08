@@ -8,12 +8,10 @@ namespace RSR.World
     {
         public float Default { get; private set; }
         public float Current { get; private set; }
-        public float Acceleration { get; private set; }
 
         private IGameSettingsProvider _settingsProvider;
         private IWorldStarter _worldStarter;
 
-        private bool _isAccelerating;
         private Sequence _boostTween;
 
         public void Construct(IGameSettingsProvider gameSettingsProvider, IWorldStarter worldStarter)
@@ -21,12 +19,10 @@ namespace RSR.World
             _settingsProvider = gameSettingsProvider;
             _worldStarter = worldStarter;
 
-            _worldStarter.OnReady += ResetAcceleration;
-            _worldStarter.OnStart += EnableAcceleration;
+            _worldStarter.OnReady += ResetMultiplyer;
 
-            Default = _settingsProvider.GameSettings.speedMultiplyer;
+            Default = _settingsProvider.GameSettings.defaultSpeedMultiplyer;
             Current = Default;
-            Acceleration = 1f;
         }
 
         public void Boost(float multiplyer, float duration)
@@ -44,34 +40,15 @@ namespace RSR.World
                 .Append(DOVirtual.Float(startValue, Default, lerpDuration, v => Current = v));
         }
 
-        private void Update()
+        private void ResetMultiplyer()
         {
-            if (_isAccelerating)
-            {
-                Acceleration += _settingsProvider.GameSettings.speedAddPerFrame * Time.deltaTime;
-            }
-        }
-
-        private void EnableAcceleration()
-        {
-            _isAccelerating = true;
-        }
-
-        private void ResetAcceleration()
-        {
-            _isAccelerating = false;
             _boostTween?.Kill();
-            Acceleration = 1f;
             Current = Default;
         }
 
         private void OnDestroy()
         {
-            if (_worldStarter != null)
-            {
-                _worldStarter.OnReady -= ResetAcceleration;
-                _worldStarter.OnStart -= EnableAcceleration;
-            }
+            _worldStarter.OnReady -= ResetMultiplyer;
         }
     }
 }

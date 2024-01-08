@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   frameRate: 60
-  vSync: 0
+  vSync: 1
   curtainsFadeTime: 0.5
   cameraPosition: {x: 5, y: 2.5, z: -10}
   speedMultiplyer: 5

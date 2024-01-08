@@ -1,4 +1,5 @@
 using RSR.Player;
+using RSR.ServicesLogic;
 using UnityEngine;
 
 namespace RSR.World
@@ -12,12 +13,15 @@ namespace RSR.World
         private IWorldStarter _worldStarter;
 
         private bool _isMoving;
+        private float _moveSpeed;
 
-        public void Construct(ISpeedMultiplyer speedMultiplyer, IPlayerDeath playerDeath, IWorldStarter worldStarter)
+        public void Construct(IGameSettingsProvider gameSettingsProvider, ISpeedMultiplyer speedMultiplyer, IPlayerDeath playerDeath, IWorldStarter worldStarter)
         {
             _speedMultiplyer = speedMultiplyer;
             _playerDeath = playerDeath;
             _worldStarter = worldStarter;
+
+            _moveSpeed = gameSettingsProvider.GameSettings.worldMoveSpeed;
 
             _worldStarter.OnReady += ResetPosition;
             _worldStarter.OnStart += StartMoving;
@@ -33,7 +37,7 @@ namespace RSR.World
         {
             if (_isMoving)
             {
-                transform.Translate(Vector3.left * _speedMultiplyer.Current * _speedMultiplyer.Acceleration * Time.deltaTime);
+                transform.Translate(Vector3.left * _moveSpeed * _speedMultiplyer.Current * Time.deltaTime);
                 Distance = Mathf.Abs(transform.position.x);
             }
         }
